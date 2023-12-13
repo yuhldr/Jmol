@@ -1,0 +1,762 @@
+/* $RCSfile$
+ * $Author: egonw $
+ * $Date: 2005-11-10 09:52:44 -0600 (Thu, 10 Nov 2005) $
+ * $Revision: 4255 $
+ *
+ * Copyright (C) 2003-2005  Miguel, Jmol Development, www.jmol.org
+ *
+ * Contact: jmol-developers@lists.sf.net
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+package org.jmol.util;
+
+import javajs.util.AU;
+import javajs.util.M4;
+import javajs.util.P3;
+import javajs.util.P3i;
+import javajs.util.P4;
+import javajs.util.PT;
+import javajs.util.T3;
+import javajs.util.V3;
+
+
+
+/**
+ * general-purpose simple unit cell for calculations 
+ * and as a super-class of unitcell, which is only part of Symmetry
+ * 
+ * allows one-dimensional (polymer) and two-dimensional (slab) 
+ * periodicity
+ * 
+ */
+
+public class SimpleUnitCell {
+
+
+  public static final int PARAM_STD = 6;
+  public static final int PARAM_VABC = 6;
+  public static final int PARAM_M4 = 6;
+  public static final int PARAM_SUPERCELL = 22;
+  public static final int PARAM_SCALE = 25;
+  public static final int PARAM_COUNT = 26;
+
+  public final static int INFO_IS_RHOMBOHEDRAL = 8;
+  public final static int INFO_IS_HEXAGONAL = 7;  
+  public final static int INFO_DIMENSIONS = 6;
+  public final static int INFO_GAMMA = 5;
+  public final static int INFO_BETA = 4;
+  public final static int INFO_ALPHA = 3;
+  public final static int INFO_C = 2;
+  public final static int INFO_B = 1;
+  public final static int INFO_A = 0;
+
+  public static final String HEX_TO_RHOMB = "2/3a+1/3b+1/3c,-1/3a+1/3b+1/3c,-1/3a-2/3b+1/3c";
+  public static final String RHOMB_TO_HEX = "a-b,b-c,a+b+c";
+
+  protected final static double toRadians = Math.PI * 2 / 360;
+
+  public final static float SLOP = 0.02f;
+  private final static float SLOP1 = 1 - SLOP;
+  /**
+   * allowance for rounding in [0,1)
+   */
+  private final static float SLOP001 = 0.001f;
+  private final static float SLOP0001 = 0.0001f;
+
+  protected float[] unitCellParams;
+  public M4 matrixCartesianToFractional;
+  public M4 matrixFractionalToCartesian;
+  protected M4 matrixCtoFNoOffset;
+  protected M4 matrixFtoCNoOffset;  
+  
+  public double volume;
+  
+  protected int dimension = 3;
+  
+  private P3 fractionalOrigin;
+  
+  
+  private int na, nb, nc;
+  
+  public boolean isSupercell() {
+    return (na > 1 || nb > 1 || nc > 1);
+  }
+
+  protected float a, b, c, alpha, beta, gamma;
+  protected double cosAlpha, sinAlpha;
+  protected double cosBeta, sinBeta;
+  protected double cosGamma, sinGamma;
+  protected double cA_, cB_;
+  protected double a_;
+  protected double b_, c_;
+
+  public static boolean isValid(float[] parameters) {
+    return (parameters != null && (parameters[0] > 0 || parameters.length > 14
+        && !Float.isNaN(parameters[14])));
+  }
+
+  protected SimpleUnitCell() {
+    fractionalOrigin = new P3();
+  }
+
+  /**
+   * 
+   * @param params
+   * 
+   *        len = 6 [a b c alpha beta gamma]
+   * 
+   *        len = 6 [a b -1 alpha beta gamma] // slab
+   * 
+   *        len = 6 [a -1 -1 alpha beta gamma] // polymer
+   * 
+   *        or len = 15 [-1 -1 -1 -1 -1 -1 va[3] vb[3] vc[3]] // vectors only
+   * 
+   *        or len = 15 [a -1 -1 -1 -1 -1 va[3] vb[3] vc[3]] // polymer, vectors only
+   * 
+   *        or len = 15 [a b -1 -1 -1 -1 va[3] vb[3] vc[3]] // slab, vectors only
+   * 
+   *        or len = 22 [a b c alpha beta gamma m00 m01 .. m33] // matrix included
+   * 
+   *        and/or len = 25 [...................... na nb nc] // supercell
+   * 
+   *        and/or len = 26 [...................... na nb nc scale] // scaled supercell
+   * 
+   * @return a simple unit cell
+   */
+  public static SimpleUnitCell newA(float[] params) {
+    SimpleUnitCell c = new SimpleUnitCell();
+    c.init(params);
+    return c;
+  }
+  
+  protected void init(float[] params) {
+    if (params == null)
+      params = new float[] { 1, 1, 1, 90, 90, 90 };
+    if (!isValid(params))
+      return;
+    params = unitCellParams = AU.arrayCopyF(params, params.length);
+
+    boolean rotateHex = false; // special gamma = -1 indicates hex rotation for AFLOW
+
+    a = params[0];
+    b = params[1];
+    c = params[2];
+    if (a > 0) {
+      if (b < 0) {
+        dimension = 1;
+      } else if (c < 0) {
+        dimension = 2;
+      }
+    }
+
+    alpha = params[3];
+    beta = params[4];
+    gamma = params[5];
+    if (gamma == -1 && c > 0) {
+      rotateHex = true;
+      gamma = 120;
+    }
+
+    // (int) Float.NaN == 0 (but not in JavaScript!)
+    // supercell
+    float fa = na = Math.max(1,
+        params.length > PARAM_SUPERCELL + 2
+            && !Float.isNaN(params[PARAM_SUPERCELL])
+                ? (int) params[PARAM_SUPERCELL]
+                : 1);
+    float fb = nb = Math.max(1,
+        params.length > PARAM_SUPERCELL + 2
+            && !Float.isNaN(params[PARAM_SUPERCELL + 1])
+                ? (int) params[PARAM_SUPERCELL + 1]
+                : 1);
+    float fc = nc = Math.max(1,
+        params.length > PARAM_SUPERCELL + 2
+            && !Float.isNaN(params[PARAM_SUPERCELL + 2])
+                ? (int) params[PARAM_SUPERCELL + 2]
+                : 1);
+    if (params.length > PARAM_SCALE && !Float.isNaN(params[PARAM_SCALE])) {
+      float fScale = params[PARAM_SCALE];
+      if (fScale > 0) {
+        fa *= fScale;
+        fb *= fScale;
+        fc *= fScale;
+      }
+    } else {
+      fa = fb = fc = 1;
+    }
+
+    if (a <= 0 && c <= 0) {
+      // must calculate a, b, c alpha beta gamma from Cartesian vectors;
+      V3 va = V3.new3(params[PARAM_VABC], params[PARAM_VABC + 1],
+          params[PARAM_VABC + 2]);
+      V3 vb = V3.new3(params[PARAM_VABC + 3], params[PARAM_VABC + 4],
+          params[PARAM_VABC + 5]);
+      V3 vc = V3.new3(params[PARAM_VABC + 6], params[PARAM_VABC + 7],
+          params[PARAM_VABC + 8]);
+      setABC(va, vb, vc);
+      if (c < 0) {
+        float[] n = AU.arrayCopyF(params, -1);
+        if (b < 0) {
+          vb.set(0, 0, 1);
+          vb.cross(vb, va);
+          if (vb.length() < 0.001f)
+            vb.set(0, 1, 0);
+          vb.normalize();
+          n[9] = vb.x;
+          n[10] = vb.y;
+          n[11] = vb.z;
+        }
+        if (c < 0) {
+          vc.cross(va, vb);
+          vc.normalize();
+          n[12] = vc.x;
+          n[13] = vc.y;
+          n[14] = vc.z;
+        }
+        params = n;
+      }
+    }
+
+    // checking here for still a dimension issue with b or c
+    // was < 0 above; here <= 0
+    a *= fa;
+    if (b <= 0) {
+      b = c = 1;
+      dimension = 1;
+    } else if (c <= 0) {
+      c = 1;
+      b *= fb;
+      dimension = 2;
+    } else {
+      b *= fb;
+      c *= fc;
+    }
+    setCellParams();
+
+    if (params.length > 21 && !Float.isNaN(params[21])) {
+      // parameters with a 4x4 matrix
+      // [a b c alpha beta gamma m00 m01 m02 m03 m10 m11.... m20...]
+      // this is for PDB and CIF reader
+      float[] scaleMatrix = new float[16];
+      for (int i = 0; i < 16; i++) {
+        float f;
+        switch (i % 4) {
+        case 0:
+          f = fa;
+          break;
+        case 1:
+          f = fb;
+          break;
+        case 2:
+          f = fc;
+          break;
+        default:
+          f = 1;
+          break;
+        }
+        scaleMatrix[i] = params[6 + i] * f;
+      }
+      matrixCartesianToFractional = M4.newA16(scaleMatrix);
+      matrixCartesianToFractional.getTranslation(fractionalOrigin);
+      matrixFractionalToCartesian = M4.newM4(matrixCartesianToFractional)
+          .invert();
+      if (params[0] == 1)
+        setParamsFromMatrix();
+    } else if (params.length > 14 && !Float.isNaN(params[14])) {
+      // parameters with a 3 vectors
+      // [a b c alpha beta gamma ax ay az bx by bz cx cy cz...]
+      M4 m = matrixFractionalToCartesian = new M4();
+      m.setColumn4(0, params[6] * fa, params[7] * fa, params[8] * fa, 0);
+      m.setColumn4(1, params[9] * fb, params[10] * fb, params[11] * fb, 0);
+      m.setColumn4(2, params[12] * fc, params[13] * fc, params[14] * fc, 0);
+      m.setColumn4(3, 0, 0, 0, 1);
+      matrixCartesianToFractional = M4.newM4(matrixFractionalToCartesian)
+          .invert();
+    } else {
+      M4 m = matrixFractionalToCartesian = new M4();
+
+      if (rotateHex) {
+        // 1, 2. align a and b symmetrically about the x axis (AFLOW)
+        m.setColumn4(0, (float) (-b * cosGamma), (float) (-b * sinGamma), 0, 0);
+        // 2. place the b is in xy plane making a angle gamma with a
+        m.setColumn4(1, (float) (-b * cosGamma), (float) (b * sinGamma), 0, 0);
+      } else {
+        // 1. align the a axis with x axis
+        m.setColumn4(0, a, 0, 0, 0);
+        // 2. place the b is in xy plane making a angle gamma with a
+        m.setColumn4(1, (float) (b * cosGamma), (float) (b * sinGamma), 0, 0);
+      }
+      // 3. now the c axis,
+      // http://server.ccl.net/cca/documents/molecular-modeling/node4.html
+      m.setColumn4(2, (float) (c * cosBeta),
+          (float) (c * (cosAlpha - cosBeta * cosGamma) / sinGamma),
+          (float) (volume / (a * b * sinGamma)), 0);
+      m.setColumn4(3, 0, 0, 0, 1);
+      matrixCartesianToFractional = M4.newM4(matrixFractionalToCartesian)
+          .invert();
+    }
+    matrixCtoFNoOffset = matrixCartesianToFractional;
+    matrixFtoCNoOffset = matrixFractionalToCartesian;
+  }
+
+  public static void addVectors(float[] params) {
+    SimpleUnitCell c = SimpleUnitCell.newA(params);
+    M4 m = c.matrixFractionalToCartesian;
+    for (int i = 0; i < 9; i++)
+    params[PARAM_VABC + i] = m.getElement(i%3, i/3);
+  }
+
+
+  private void setParamsFromMatrix() {
+    V3 va = V3.new3(1,  0,  0);
+    V3 vb = V3.new3(0,  1,  0);
+    V3 vc = V3.new3(0,  0,  1);
+    matrixFractionalToCartesian.rotate(va);
+    matrixFractionalToCartesian.rotate(vb);
+    matrixFractionalToCartesian.rotate(vc);
+    setABC(va, vb, vc);
+    setCellParams();
+  }
+
+  private void setABC(V3 va, V3 vb, V3 vc) {
+    a = va.length();
+    b = vb.length();
+    c = vc.length();
+    if (a == 0)
+      return;
+    if (b == 0)
+      b = c = -1; //polymer
+    else if (c == 0)
+      c = -1; //slab
+    alpha = (float) (b < 0 || c < 0 ? 90 : vb.angle(vc) / toRadians);
+    beta = (float) (c < 0 ? 90 : va.angle(vc) / toRadians);
+    gamma = (float) (b < 0 ? 90 : va.angle(vb) / toRadians);
+    float[] p = unitCellParams;
+    p[0] = a;
+    p[1] = b;
+    p[2] = c;
+    p[3] = alpha;
+    p[4] = beta;
+    p[5] = gamma;
+  }
+
+  private void setCellParams() {
+    //System.out.println("unitcell " + a + " " + b + " " + c);
+    cosAlpha = Math.cos(toRadians * alpha);
+    sinAlpha = Math.sin(toRadians * alpha);
+    cosBeta = Math.cos(toRadians * beta);
+    sinBeta = Math.sin(toRadians * beta);
+    cosGamma = Math.cos(toRadians * gamma);
+    sinGamma = Math.sin(toRadians * gamma);
+    double unitVolume = Math.sqrt(sinAlpha * sinAlpha + sinBeta * sinBeta
+        + sinGamma * sinGamma + 2.0 * cosAlpha * cosBeta * cosGamma - 2);
+    volume = a * b * c * unitVolume;
+    // these next few are for the B' calculation
+    cA_ = (cosAlpha - cosBeta * cosGamma) / sinGamma;
+    cB_ = unitVolume / sinGamma;
+    a_ = b * c * sinAlpha / volume;
+    b_ = a * c * sinBeta / volume;
+    c_ = a * b * sinGamma / volume;
+  }
+
+  public P3 getFractionalOrigin() {
+    return fractionalOrigin ;
+  }
+
+  /**
+   * convenience return only after changing fpt
+   * 
+   * @param fpt
+   * @return adjusted fpt
+   */
+  public P3 toSupercell(P3 fpt) {
+    fpt.x /= na;
+    fpt.y /= nb;
+    fpt.z /= nc;
+    return fpt;
+  }
+
+  public final void toCartesian(T3 pt, boolean ignoreOffset) {
+    if (matrixFractionalToCartesian != null)
+      (ignoreOffset ? matrixFtoCNoOffset : matrixFractionalToCartesian)
+          .rotTrans(pt);
+  }
+
+  public void toFractionalM(M4 m) {
+    if (matrixCartesianToFractional == null)
+      return;
+    m.mul(matrixFractionalToCartesian);
+    m.mul2(matrixCartesianToFractional, m);
+  }
+  
+  public final void toFractional(T3 pt, boolean ignoreOffset) {
+    if (matrixCartesianToFractional == null)
+      return;
+    (ignoreOffset ? matrixCtoFNoOffset : matrixCartesianToFractional)
+        .rotTrans(pt);
+  }
+
+  public boolean isPolymer() {
+    return (dimension == 1);
+  }
+
+  public boolean isSlab() {
+    return (dimension == 2);
+  }
+
+  public final float[] getUnitCellParams() {
+    return unitCellParams;
+  }
+
+  public final float[] getUnitCellAsArray(boolean vectorsOnly) {
+    M4 m = matrixFractionalToCartesian;
+    return (vectorsOnly ? new float[] { 
+        m.m00, m.m10, m.m20, // Va
+        m.m01, m.m11, m.m21, // Vb
+        m.m02, m.m12, m.m22, // Vc
+      } 
+      : new float[] { 
+        a, b, c, alpha, beta, gamma, 
+        m.m00, m.m10, m.m20, // Va
+        m.m01, m.m11, m.m21, // Vb
+        m.m02, m.m12, m.m22, // Vc
+        dimension, (float) volume,
+      } 
+    );
+  }
+
+  public final float getInfo(int infoType) {
+    switch (infoType) {
+    case INFO_A:
+      return a;
+    case INFO_B:
+      return b;
+    case INFO_C:
+      return c;
+    case INFO_ALPHA:
+      return alpha;
+    case INFO_BETA:
+      return beta;
+    case INFO_GAMMA:
+      return gamma;
+    case INFO_DIMENSIONS:
+      return dimension;
+    case INFO_IS_HEXAGONAL:
+      return (isHexagonal(unitCellParams) ? 1 : 0);
+    case INFO_IS_RHOMBOHEDRAL:
+      return (isRhombohedral(unitCellParams) ? 1 : 0);      
+    }
+    return Float.NaN;
+  }
+
+  /**
+   * calculate weighting of 1 (interior), 0.5 (face), 0.25 (edge), or 0.125 (vertex)
+   * @param pt
+//   * @param tolerance fractional allowance to consider this on an edge
+   * @return weighting
+   */
+  public static float getCellWeight(P3 pt) {
+    float f = 1;
+    if (pt.x <= SLOP || pt.x >= SLOP1)
+      f /= 2;
+    if (pt.y <= SLOP || pt.y >= SLOP1)
+      f /= 2;
+    if (pt.z <= SLOP || pt.z >= SLOP1)
+      f /= 2;
+    return f;
+  }
+  
+  /**
+   * Generate the reciprocal unit cell, scaled as desired
+   * 
+   * @param abc [a,b,c] or [o,a,b,c]
+   * @param ret
+   * @param scale 0 for 2pi, teneral reciprocal lattice
+   * @return oabc
+   */
+  public static T3[] getReciprocal(T3[] abc, T3[] ret, float scale) {
+    if (scale == 0)
+      scale = (float)(2 * Math.PI);
+    P3[] rabc = new P3[4];
+    int off = (abc.length == 4 ? 1 : 0);
+    rabc[0] = (off == 1 ? P3.newP(abc[0]) : new P3()); // origin
+    // a' = 2pi/V * b x c  = 2pi * (b x c) / (a . (b x c))
+    // b' = 2pi/V * c x a 
+    // c' = 2pi/V * a x b 
+    for (int i = 0; i < 3; i++) {
+      P3 v = rabc[i + 1] = new P3();
+      v.cross(abc[((i + 1) % 3) + off], abc[((i + 2) % 3) + off]);
+      v.scale(scale / abc[i + off].dot(v));
+    }
+    if (ret == null)
+      return rabc;
+    for (int i = 0; i < 4; i++)
+      ret[i] = rabc[i];
+    return ret;
+  }
+
+  /**
+   * set cell vectors by string
+   * 
+   * 
+   * @param abcabg "a=...,b=...,c=...,alpha=...,beta=..., gamma=..." or null  
+   * @param params to use if not null 
+   * @param ucnew  to create and return; null if only to set params
+   * @return T3[4] origin, a, b c
+   */
+  public static T3[] setOabc(String abcabg, float[] params, T3[] ucnew) {
+    if (abcabg != null) {
+      if (params == null)
+        params = new float[6];
+      String[] tokens = PT.split(abcabg.replace(',', '='), "=");
+      if (tokens.length >= 12)
+        for (int i = 0; i < 6; i++)
+          params[i] = PT.parseFloat(tokens[i * 2 + 1]);
+    }
+    if (ucnew == null)
+      return null;
+    float[] f = newA(params).getUnitCellAsArray(true);
+      ucnew[1].set(f[0], f[1], f[2]);
+      ucnew[2].set(f[3], f[4], f[5]);
+      ucnew[3].set(f[6], f[7], f[8]);
+    return ucnew;
+  }
+
+  public static void unitizeDim(int dimension, T3 pt) {
+    switch (dimension) {
+    case 3:
+      pt.z = unitizeX(pt.z);  
+      //$FALL-THROUGH$
+    case 2:
+      pt.y = unitizeX(pt.y);
+      //$FALL-THROUGH$
+    case 1:
+      pt.x = unitizeX(pt.x);
+    }
+  }
+
+  public static void unitizeDimRnd(int dimension, T3 pt) {
+    switch (dimension) {
+    case 3:
+      pt.z = unitizeXRnd(pt.z);  
+      //$FALL-THROUGH$
+    case 2:
+      pt.y = unitizeXRnd(pt.y);
+      //$FALL-THROUGH$
+    case 1:
+      pt.x = unitizeXRnd(pt.x);
+    }
+  }
+
+  public static float unitizeX(float x) {
+    // introduced in Jmol 11.7.36
+    x = (float) (x - Math.floor(x));
+    // question - does this cause problems with dragatom?
+    if (x > 0.999f || x < 0.001f)  // 0.9999, 0.0001 was just too tight ams/jolliffeite
+      x = 0;
+    return x;
+  }
+
+  public static float unitizeXRnd(float x) {
+    // introduced in Jmol 11.7.36
+    x = (float) (x - Math.floor(x));
+    if (x > 0.9999f || x < 0.0001f) 
+      x = 0;
+    return x;
+  }
+  
+
+
+  public static float normalizeXRnd(float x) {
+    return Math.round(x*12) / 12;
+  }
+
+  
+  
+  /**
+   * check atom position for range [0, 1) allowing for rounding
+
+   * @param pt 
+   * @return true if in [0, 1)
+   */
+  public boolean checkPeriodic(P3 pt) {
+    switch (dimension) {
+    case 3:
+      if (pt.z < -SLOP0001 || pt.z > 1 - SLOP0001)
+        return false;
+      //$FALL-THROUGH$
+    case 2:
+      if (pt.y < -SLOP0001 || pt.y > 1 - SLOP0001)
+        return false;
+      //$FALL-THROUGH$
+    case 1:
+    if (pt.x < -SLOP0001 || pt.x > 1 - SLOP0001)
+      return false;
+    }
+    return true;
+  }
+
+  public boolean isWithinUnitCell(double a, double b, double c, P3 pt) {
+    switch (dimension) {
+    case 3:
+      if (pt.z < c - 1d - SLOP || pt.z > c + SLOP)
+        return false;
+      //$FALL-THROUGH$
+    case 2:
+      if (pt.y < b - 1d - SLOP || pt.y > b + SLOP)
+        return false;
+      //$FALL-THROUGH$
+    case 1:
+    if (pt.x < a - 1d - SLOP || pt.x > a + SLOP)
+      return false;
+    }
+    return true;
+  }
+
+  ////// lattice methods //////
+  
+  /**
+   * Expanded cell notation:
+   * 
+   * 111 - 1000 --> center 5,5,5; range 0 to 9 or -5 to +4
+   * 
+   * 1000000 - 1999999 --> center 50,50,50; range 0 to 99 or -50 to +49
+   * 1000000000 - 1999999999 --> center 500, 500, 500; range 0 to 999 or -500 to
+   * +499
+   * 
+   * @param nnn
+   * @param cell
+   * @param offset
+   *        0 or 1 typically; < 0 means "apply no offset"
+   * @param kcode
+   *        Generally the multiplier is just {ijk ijk scale}, but when we have
+   *        1iiijjjkkk 1iiijjjkkk scale, floats lose kkk due to Java float
+   *        precision issues so we use P4 {1iiijjjkkk 1iiijjjkkk scale,
+   *        1kkkkkk}. Here, our offset -- initially 0 or 1 from the uccage
+   *        renderer, but later -500 or -499 -- tells us which code we are
+   *        looking at, the first one or the second one.
+   * 
+   */
+  public static void ijkToPoint3f(int nnn, P3 cell, int offset, int kcode) {
+    int f = (nnn > 1000000000 ? 1000 : nnn > 1000000 ? 100 : 10);
+    int f2 = f * f;
+    offset -= (offset >= 0 ? 5 * f / 10 : offset);
+    cell.x = ((nnn / f2) % f) + offset;
+    cell.y = (nnn % f2) / f + offset;
+    cell.z = (kcode == 0 ? nnn % f 
+        : (offset == -500 ? kcode / f : kcode) % f) + offset;
+  }
+  
+
+  /**
+   * Convert user's {3 2 1} to {1500500500, 1503502501, 0 or 1, 1500501}
+   * @param pt
+   * @param scale 1 for block of unit cells; 0 for one large supercell
+   * @return converted P4
+   */
+  public static P4 ptToIJK(T3 pt, int scale) {
+    if (pt.x <= 5 && pt.y <= 5 && pt.z <= 5) {
+      return P4.new4(555, (pt.x + 4) * 100 + (pt.y + 4) * 10 + pt.z + 4, scale, 0);
+    } 
+    int i555 = 1500500500;
+    return P4.new4(i555, i555 + pt.x*1000000 + pt.y * 1000 + pt.z, scale, 1500500 + pt.z);
+  }
+
+  /**
+   * Generally the multiplier is just {ijk ijk scale}, but when we have
+   * 1iiijjjkkk 1iiijjjkkk scale, floats lose kkk due to Java float precision
+   * issues so we use P4 {1iiijjjkkk 1iiijjjkkk scale, 1kkkkkk}
+   * 
+   * @param pt
+   * @return String representation for state
+   */
+  public static String escapeMultiplier(T3 pt) {
+    if (pt instanceof P4) {
+      P4 pt4 = (P4) pt;
+      int x = (int) Math.floor(pt4.x / 1000)*1000 
+                  + (int) Math.floor(pt4.w / 1000) - 1000;
+      int y = (int) Math.floor(pt4.y / 1000)*1000 
+          + (int) Math.floor(pt4.w) % 1000;
+      return "{" + x + " " + y + " " + pt.z + "}"; 
+    }
+    return Escape.eP(pt);
+  }
+
+  /**
+   * 
+   * @param dimension
+   * @param minXYZ
+   * @param maxXYZ
+   * @param kcode
+   *        Generally the multiplier is just {ijk ijk scale}, but when we have
+   *        1iiijjjkkk 1iiijjjkkk scale, floats lose kkk due to Java float
+   *        precision issues so we use P4 {1iiijjjkkk 1iiijjjkkk scale,
+   *        1kkkkkk}. Here, our offset -- initially 0 or 1 from the uccage
+   *        renderer, but later -500 or -499 -- tells us which code we are
+   *        looking at, the first one or the second one.
+   */
+  public static void setMinMaxLatticeParameters(int dimension, P3i minXYZ, P3i maxXYZ, int kcode) {
+    
+    if (maxXYZ.x <= maxXYZ.y && maxXYZ.y >= 555) {
+      //alternative format for indicating a range of cells:
+      //{111 666}
+      //555 --> {0 0 0}
+      P3 pt = new P3();
+      ijkToPoint3f(maxXYZ.x, pt, 0, kcode);
+      minXYZ.x = (int) pt.x;
+      minXYZ.y = (int) pt.y;
+      minXYZ.z = (int) pt.z;
+      ijkToPoint3f(maxXYZ.y, pt, 1, kcode);
+      //555 --> {1 1 1}
+      maxXYZ.x = (int) pt.x;
+      maxXYZ.y = (int) pt.y;
+      maxXYZ.z = (int) pt.z;
+    }
+    switch (dimension) {
+    case 1: // polymer
+      minXYZ.y = 0;
+      maxXYZ.y = 1;
+      //$FALL-THROUGH$
+    case 2: // slab
+      minXYZ.z = 0;
+      maxXYZ.z = 1;
+    }
+  }
+  
+  public static boolean isHexagonal(float[] params) {
+    // a == b && alpha = beta = 90 && gamma = 120 (gamma -1 is a "rotateHexCell" indicator for AFLOW
+    return (approx0(params[0] - params[1]) 
+        && params[3] == 90 && params[4] == 90 && (params[5] == 120 || params[5] == -1));
+  }
+
+  public static boolean isRhombohedral(float[] params) {
+    return (approx0(params[0] - params[1]) && approx0(params[1] - params[2])
+        && params[3] != 90 && approx0(params[3] - params[4])
+        && approx0(params[4] - params[5]));
+  }
+
+  public static boolean approx0(float f) {
+    return (Math.abs(f) < SLOP001);
+  }
+
+  
+  @Override
+  public String toString() {
+    return "[" + a + " " + b + " " + c + " " + alpha + " " + beta + " " + gamma + "]";
+  }
+  
+}

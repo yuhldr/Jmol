@@ -1,0 +1,702 @@
+<project name="Jmol" default="main" basedir=".">
+  <!--
+      DocumentId  $Id: build-4-Jmol.jar-and-release.xml 22593 2023-11-23 05:54:28Z hansonr $
+  -->
+	
+  <!-- see build-README.txt for build notes -->
+	
+  <!-- Contributions -->
+  <!-- <for list ...> construct needs ant-contrib.jar -->
+  <taskdef resource="net/sf/antcontrib/antlib.xml">
+    <classpath>
+      <pathelement location="tools/ant-contrib.jar" />
+    </classpath>
+  </taskdef>
+
+	
+  <!-- pull developer-specific settings from their home directory -->
+  <property file="${user.home}/.jmol.build.properties" />
+  <!-- compile options -->
+  <property name="build.sysclasspath" value="ignore" />
+  <property name="build.compiler" value="javac1.8" />
+  <!-- for some reason, I can't get ant to use this ${java.version}
+       property as the value of the source parameter -->
+  <property name="java.version" value="1.8" />
+  <property name="debug" value="on" />
+  <property name="deprecation" value="off" />
+  <property name="optimization" value="off" />
+	<copy todir="" >
+	  <fileset dir="src/org/jmol/viewer/">
+	    <include name="Jmol.properties" />
+	  </fileset>
+	  <filterchain>
+	    <striplinecomments>
+	      <comment value="#" />
+	    </striplinecomments>
+	    <linecontains>
+	      <contains value="Jmol.___" />
+	    </linecontains>
+	  </filterchain>
+	</copy>
+  <property file="Jmol.properties" prefix="Jmol.properties" />
+  <property name="version" value="${Jmol.properties.Jmol.___JmolVersion}" />
+  <propertyregex property="version"
+  			  override = "true"
+	          input="${version}"
+  			  regexp='(")([^"]+)(")'
+	          select="\2"
+  		      global="true"
+	          />
+  <echo message="version=${version}" />
+  <property name="jvxl_version" value="0.1" />
+<!--
+  <input message="private property file:" addproperty="Private.propertyFile" defaultValue="none" />
+  <if><available file="${Private.propertyFile}" /><then>
+  	<property file="${Private.propertyFile}" />
+	<echo>using ${Private.keystore} ${Private.storetype}</echo>
+  </then></if>
+  -->
+  <property name="tests.source.dir" value="source-tests" />
+  <property name="lib.dir" value="jars" />
+  <property name="plugin.dir" value="plugin-jars" />
+  <property name="appjars.dir" value="build/appjars" />
+  <property name="classes.dir" value="build/classes" />
+  <property name="test-classes.dir" value="build/test-classes" />
+  <!-- property name="applet.classes.dir" value="build/applet-classes" / -->
+  <property name="apisio.classes.dir" value="build/apisio-classes" />
+  <property name="tests.dir" value="build/unit.tests" />
+  <property name="javadoc.dir" value="build/javadoc" />
+  <!-- property name="jmol.applet.web.dir" value="appletweb" / -->
+  <property name="docbook-xsl" value="docbook-xsl-1.76.1" />
+  <property name="docbook-xml" value="docbook-xml-4.4" />
+  <property name="naga.jar" value="naga-3_0.jar" />
+  <property name="commons-cli.jar" value="commons-cli-1.2.jar" />
+  <property name="inchi.jar" value="jni-inchi-0.7-jar-with-dependencies.jar" />
+  <property name="saxon.jar" value="saxon.jar" />
+  <property name="saxon.main" value="com.icl.saxon.StyleSheet" />
+  <property name="selfsign.store" value="ca-cert/selfSignedCertificate/selfSignedCertificate.store" />
+  <property name="selfsign.storetype" value="jks" />
+  <property name="selfsign.storepass" value="selfSignedCertificate" />
+  <property name="selfsign.alias" value="selfSignedCertificate" />
+  <property name="tsa.url" value="http://timestamp.globalsign.com/scripts/timestamp.dll" />
+	  <!-- property name="tsa.url" value="http://tsa.starfieldtech.com" / -->
+	
+	<!-- http://timestamp.globalsign.com/scripts/timestamp.dll or  http://tsa.starfieldtech.com/, which stopped working 3/27/14 and again on 4/8/14 -->
+
+
+	<!-- you can set this by defining it in ~/.jmol.build.properties -->
+  <property name="keystore.name" value="Must be set by user." />
+
+  <!-- this value is required if you are building the .NET DLL, it must point to the IKVM/bin directory -->
+  <property name="ikvm.home" value="Must be set by user." />
+	
+  <property file="proxy.properties" />
+
+  <import file="tools/build-i18n.xml"/>
+
+  <path id="project.class.path">
+    <fileset dir="${lib.dir}">
+      <include name="*.jar" />
+    </fileset>
+  </path>
+  
+  <!-- path id="applet-project.class.path">
+    <fileset dir="${lib.dir}">
+      <include name="*.jar" />
+    </fileset>
+  </path> -->
+  
+  <path id="apisio-project.class.path">
+    <fileset dir="${lib.dir}">
+      <!-- include name="${vecmath.jar}" / -->
+      <!-- include name="netscape.jar" / -->
+      <include name="gnujaxp.jar" />
+    </fileset>
+  </path>
+
+	
+	
+  <property name="sendAll"         value="true" />
+  <property name="sendZip"         value="true" />
+  <property name="dist.dir"        value="build/dist" />
+  <property name="src.dir"         value="src" />
+  <property name="temp.dir"        value="build/release" />
+  <property name="web.dir"         value="/home/frs/project/j/jm/jmol" />
+  <property name="web.host"        value="frs.sourceforge.net" /> 
+  <property name="prefix.release"  value="Jmol " />
+
+  <echo message="${dist.dir}" />
+		
+  <property file="${dist.dir}/Jmol.properties" prefix="Jmol.properties" />
+  <property name="version" value="${Jmol.properties.Jmol.___JmolVersion}" />
+  <propertyregex property="version"
+	  override = "true"
+	  input="${version}"
+	  regexp='(")([^"]+)(")'
+  	  select="\2"
+      global="true"
+  />
+  <echo message="version=${version}" />
+
+	<loadresource property="versionMajorMinor">
+	  <string value="${version}"/>
+	  <filterchain>
+	    <tokenfilter>
+		      <replaceregex pattern="([0-9]+[.][0-9]+)(.*)" replace="\1"/>
+	    </tokenfilter>
+	  </filterchain>
+	</loadresource>
+	<echo message="versionMajorMinor: ${versionMajorMinor}"/>
+	
+	<loadresource property="versionMajorMinorPatch">
+	  <string value="${version}"/>
+	  <filterchain>
+	    <tokenfilter>
+		      <replaceregex pattern="([^-]*)(-beta)(.*)" replace="\1"/>
+	    </tokenfilter>
+	  </filterchain>
+	</loadresource>
+	<echo message="versionMajorMinorPatch: ${versionMajorMinorPatch}"/>
+
+		<loadresource property="betaFlag">
+	  <string value="${version}"/>
+	  <filterchain>
+	    <tokenfilter>
+	      <replaceregex pattern="([^-]*)(-beta)(.*)" replace="\2"/>
+	    </tokenfilter>
+	  </filterchain>
+	</loadresource>
+	<property name="pathdir-full" value="Jmol/Version" />
+  	<if>
+     <equals arg1="${betaFlag}" arg2="${version}" />
+  	 <then>
+  		<property name="pathdir"    value="${pathdir-full}" />
+    </then>
+  	<else>
+  		<property name="pathdir"    value="Jmol-beta/Jmol" />
+  	</else>
+  	</if>
+	<echo message="betaFlag: ${betaFlag}"/>
+
+	<property name="path.release"    value="${pathdir} ${versionMajorMinor}" />
+	<echo message="path.release: ${path.release}"/>
+
+
+	<!-- Copying files to website -->
+  <target name="deploy" >
+
+  	
+    <!-- Ask user for confirmation -->
+    <input
+      message="Destination Path for ${version} (clear to exit)"
+      defaultvalue="${path.release}/${prefix.release}${versionMajorMinorPatch}"
+      addproperty="uploadPath"
+    />
+  	<!-- Cleanup -->
+    <delete dir="${temp.dir}"/>
+  </target>
+
+	
+	
+	
+  <target name="main" id="main" depends="init,jar" /> <!-- ,applet-jar,signed-applet,smiles-applet-jar"/ -->
+  
+  <target name="all" id="all" depends="main"/> <!-- doc,main"/ -->
+
+  <target name="init" id="init">
+    <tstamp/>
+  </target>
+
+  <target name="initFailure" id="initFailure">
+    <fail message="Init failed. See messages above." />
+  </target>
+
+  <target id="classes" name="classes" depends="init">
+    <mkdir dir="${classes.dir}"/>
+    <javac srcdir="src" destdir="${classes.dir}" encoding="UTF8"
+           debug="${debug}" deprecation="${deprecation}"
+           optimize="${optimization}" source="1.8" target="1.8">
+      <classpath refid="project.class.path" />
+      <exclude name="astex/**/*.java"/>
+      <exclude name="java_cup/**/*.java"/>
+    </javac>
+    <copy todir="${classes.dir}" >
+      <fileset dir="src">
+        <include name="**/license.txt" />
+        <include name="**/*.jpg" />
+        <include name="**/*.gif" />
+        <include name="**/*.po" />
+      	<include name="**/*.png" />
+        <include name="**/*.html" />
+        <include name="**/*.js" />
+        <include name="**/*.dtd" />
+        <include name="**/*.properties" />
+        <include name="**/Properties/*" />
+        <!-- for testing internationalisation only:
+             comment out the 2 lines above and uncomment the following 3 lines -->
+        <!--
+        <include name="**/JmolPop*.properties" />
+        <include name="**/Properties/Jmol.properties" />
+        <include name="**/Properties/Jmol-resources.properties" />
+        -->
+        <include name="**/Data/*" />
+        <include name="**/*.txt" />
+        <include name="**/*.json" />
+      </fileset>
+    </copy>
+    <copy file="Jmol.properties" tofile="${classes.dir}/org/jmol/viewer/Jmol.properties" />
+  </target>
+
+  	<target name="check.libjars" id="check.libjars">
+    <condition property="libjars.uptodate">
+      <and>
+        <uptodate targetfile="${appjars.dir}">
+          <srcfiles dir="${lib.dir}" includes="${naga.jar}"/>
+          <srcfiles dir="${lib.dir}" includes="${commons-cli.jar}"/>
+          <srcfiles dir="${lib.dir}" includes="${inchi.jar}"/>
+        </uptodate>
+        <uptodate targetfile="build/libjars.timestamp"
+                  srcfile="${appjars.dir}"/>
+      </and>
+    </condition>
+  </target>
+
+
+  <target name="libjars" id="libjars" depends="check.libjars" unless="libjars.uptodate">
+    <delete file="build/libjars.timestamp"/>
+    <mkdir dir="${appjars.dir}"/>
+    <!-- unjar dest="${appjars.dir}" src="${lib.dir}/${vecmath.jar}"/ -->
+    <!-- unjar dest="${appjars.dir}" src="${lib.dir}/Acme.jar"/ -->
+    <!-- unjar dest="${appjars.dir}" src="${lib.dir}/${itext.jar}"/ -->
+    <unjar dest="${appjars.dir}" src="${lib.dir}/${naga.jar}"/>
+    <unjar dest="${appjars.dir}" src="${lib.dir}/${commons-cli.jar}"/>
+  	<delete dir="${appjars.dir}/javajs" />
+  	<delete dir="${appjars.dir}/org/jmol" />
+  	<delete dir="${appjars.dir}/org/apache/tools" />
+  	<delete dir="${appjars.dir}/META-INF" />
+    <unjar dest="${appjars.dir}" src="${lib.dir}/${inchi.jar}"/>
+  	<move file="${appjars.dir}/META-INF/LICENSE" tofile="${appjars.dir}/META-INF/LICENSE-JNI-INCHI"/>
+  	<delete file="${appjars.dir}/META-INF/MANIFEST.MF" />
+  	<!-- the following mitigation is in accord with https://logging.apache.org/log4j/2.x/security.html
+  	     despite the fact that the org/apache/logging package is not included in Jmol.
+  	     It is added here in case JNI-InChI is ever upgraded to Log4J2 (which requires Java 7+) -->  
+  	<delete file="${appjars.dir}/org/apache/logging/log4j/core/lookup/JndiLookup.class" />
+    <touch file="build/libjars.timestamp"/>
+  </target>
+
+    	  <!-- target name="jar" id="jar"
+    	          depends="init,classes,jmolGuide,jmolHistory,jmolDevelopersGuide,libjars,main-i18n" -->
+
+    	
+    	<target name="jar" id="jar"
+          depends="init,classes,libjars">
+    <if><equals arg1="${Private.propertyFile}" arg2="nojar" />
+    	<then><echo>Skipping jar creation</echo></then><else>
+
+<!--
+  	
+  	<copy todir="${classes.dir}/org/openscience/jmol/Data/guide" >
+      <fileset dir="build/doc/JmolUserGuide">
+        <include name="**/*.html" />
+      </fileset>
+    </copy>
+    <copy todir="${classes.dir}/org/openscience/jmol/Data/guide_fr" >
+      <fileset dir="build/doc/JmolUserGuide_fr">
+        <include name="**/*.html" />
+      </fileset>
+    </copy>
+    <copy todir="${classes.dir}/org/openscience/jmol/Data" >
+      <fileset dir="build/doc/JmolHistory">
+        <include name="**/*.html" />
+      </fileset>
+    </copy>
+     -->
+    <echo message="Creating Jmol.jar -- if this fails, check to see that build/Jmol.jar is not open." />
+    <jar destfile="build/Jmol.jar"
+         manifest="manifest/application.txt">
+      <fileset dir="${classes.dir}" >
+        <exclude name="**/.*" />
+        <exclude name="**/*.dx" />
+        <exclude name="ant/**" />
+        <include name="com/**" />
+        <include name="net/sf/**" />
+        <include name="javajs/api/**" />
+        <include name="javajs/awt/**" />
+        <include name="javajs/export/**" />
+        <include name="javajs/img/**" />
+        <include name="javajs/util/**" />
+        <include name="jme/**" />
+        <include name="**/jspecview/**" />
+        <include name="**/org/gennbo/**" />
+        <include name="**/org/apache/**" />
+        <include name="**/org/qcschema/**" />
+        <include name="**/jmol/**" />
+        <exclude name="**/Test*.class" />
+        <exclude name="**/jmol/jcamp/**" />
+        <exclude name="**/jmol/applet/*" />
+        <exclude name="**/app/JmolData.class" />
+      </fileset>
+      <fileset dir="${appjars.dir}" includes="**/*"/>
+    </jar>
+
+<!--
+    <antcall target="sign-jar-file">
+      <param name="sign-jar-file-dir" value="build" />
+      <param name="sign-jar-file-name"  value="Jmol.jar" />
+    </antcall>
+  	-->
+    	    <echo message="Creating JmolData.jar -- if this fails, check to see that build/Jmol.jar is not open." />
+    <jar destfile="build/JmolData.jar"
+         manifest="manifest/applicationData.txt">
+      <fileset dir="${classes.dir}" >
+        <exclude name="**/Test*.class" />
+        <exclude name="**/jmol/jcamp/**" />
+        <exclude name="**/jmol/applet/*" /> 
+        <exclude name="**/.*" />
+        <exclude name="**/*.dx" />
+        <exclude name="**/Test*.class" />
+        <exclude name="ant/**" />
+        <exclude name="com/**" />
+        <include name="net/sf/**" />
+        <include name="javajs/api/**" />
+        <include name="javajs/awt/**" />
+        <include name="javajs/export/**" />
+        <include name="javajs/img/**" />
+        <include name="javajs/util/**" />
+        <include name="**/jspecview/**" />
+        <include name="**/org/gennbo/**" />
+        <include name="**/org/apache/**" />
+        <include name="**/org/qcschema/**" />
+        <include name="**/jmol/**" />
+        <exclude name="**/jmol/_documents/**" />
+        <exclude name="**/jmol/applet/**" />
+        <exclude name="**/jmol/*js/**" />
+        <exclude name="**/jmol/console/**" />
+        <exclude name="**/jmol/popup/**" />
+        <exclude name="org/jmol/util/BitSet32.class" />
+        <exclude name="**/openscience/jmol/Data/**" />
+        <exclude name="**/openscience/jmol/app/Jmol.class" />
+        <exclude name="**/openscience/jmol/app/images/**" />
+        <exclude name="**/openscience/jmol/app/jmolpanel/**" />
+        <exclude name="**/openscience/jmol/app/webexport/**" />
+      </fileset>
+      <fileset dir="${appjars.dir}" includes="**/*"/>
+    </jar>
+    		<!--
+    <antcall target="sign-jar-file">
+      <param name="sign-jar-file-dir" value="build" />
+      <param name="sign-jar-file-name"  value="JmolData.jar" />
+    </antcall>
+-->
+    <copy todir="build">
+      <fileset dir=".">
+        <include name="jmol" />
+        <include name="jmol.bat" />
+        <include name="jmol.sh" />
+      </fileset>
+    </copy>
+
+    <jar destfile="build/Jvxl.jar"
+         manifest="manifest/jvxl.txt">
+      <fileset dir="${classes.dir}" >
+        <exclude name="**/.*" />
+        <exclude name="**/*.dx" />
+        <exclude name="**/Test*.class" />
+        <include name="org/openscience/jvxl/*" />
+        <include name="org/jmol/api/**" />
+        <include name="org/jmol/atomdata/**" />
+        <include name="org/jmol/c/**" />
+        <include name="org/jmol/g3d/**" />
+        <include name="org/jmol/jvxl/**" />
+        <include name="org/jmol/io/**" />
+        <include name="org/jmol/util/**" />
+        <include name="org/jmol/viewer/JmolConstants.class" />
+      </fileset>
+      <fileset dir="${appjars.dir}" includes="**/*"/>
+    </jar>
+      	
+   </else></if>
+  </target>
+
+   	<target name="dist" id="dist">
+	        		
+	          	
+		  <!-- 
+		  
+		  Bob had problems with Eclipse Juno repeating the entire
+		  signing process twice here and crashing (io error in jarsigner) 
+		  close to the end of the second round. 	 -->
+		
+    <!-- first build binary distribution -->
+    <delete dir="build/dist/jmol-${version}"/>
+    <mkdir dir="build/dist/jmol-${version}"/>
+    <copy todir="build/dist/jmol-${version}" >
+      <fileset dir="build">
+        <include name="Jmol.jar" />
+        <include name="JmolData.jar" />
+        <include name="JmolLib.jar" />
+        <include name="JSpecView.jar" />
+        <include name="jspecview.properties" />
+      </fileset>
+      <fileset dir=".">
+        <include name="jmol" />
+        <include name="jmol.sh" />
+        <include name="jmol.mac" />
+        <include name="jmol.bat" />
+        <include name="*.txt" />
+      </fileset>
+    </copy>
+    <copy file="src/org/jmol/viewer/Jmol.properties" tofile="build/dist/jmol-${version}/CHANGES.txt" />
+    <chmod perm="ugo+rx">
+      <fileset dir="build/dist/jmol-${version}">
+        <include name="jmol"/>
+        <include name="jmol.sh"/>
+        <include name="jmol.bat"/>
+      </fileset>
+    </chmod>
+
+    <copy todir="build/dist/jmol-${version}" >
+      <fileset dir="./appletweb">
+        <include name="README*.txt" />
+        <include name="jsmol.zip" />
+      </fileset>
+    </copy>
+
+   <!--
+    zip distributions to not retain file permissions ...
+    miguel 2 feb 2006 but there have been requests for them anyway -->
+
+    <zip zipfile="build/dist/jmol-${version}-binary.zip" basedir="build/dist"
+         includes="jmol-${version}/**" />
+
+    <tar tarfile="build/dist/jmol-${version}-binary.tar.gz"
+         compression="gzip" >
+      <tarfileset dir="build/dist"
+                  excludes="*/jmol,*/jmol.sh"
+                  includes="jmol-${version}/**" />
+      <tarfileset dir="build/dist"
+                  mode="755"
+    	    includes="jmol-${version}/jmol,jmol-${version}/jmol.sh" />
+    </tar>
+
+    <!-- then build source distribution -->
+
+    <copy todir="build/dist/jmol-${version}" >
+      <fileset dir=".">
+        <include name="applet.classes" />
+        <include name="build.xml" />
+        <include name="build-i18n.xml" />
+      </fileset>
+    </copy>
+
+    <copy todir="build/dist/jmol-${version}/src" >
+      <fileset dir="src" />
+<!--      <fileset dir="srcjsv" />  -->
+    </copy>
+
+		<!-- 
+    <copy todir="build/dist/jmol-${version}/ca-cert" >
+      <fileset dir="ca-cert">
+        <exclude name="**/*.p12" />
+      </fileset>
+    </copy>
+    
+        <copy todir="build/dist/jmol-${version}/${plugin.dir}" >
+      <fileset dir="${plugin.dir}" />
+    </copy>
+
+    
+-->
+    <copy todir="build/dist/jmol-${version}/${lib.dir}" >
+      <fileset dir="${lib.dir}" />
+    </copy>
+
+    <copy todir="build/dist/jmol-${version}/appletweb" >
+      <fileset dir="appletweb" />
+    </copy>
+
+    <copy todir="build/dist/jmol-${version}/manifest" >
+      <fileset dir="manifest" />
+    </copy>
+
+   		<!--
+    <copy todir="build/dist/jmol-${version}/doc" >
+      <fileset dir="doc" />
+    </copy>
+-->
+    <copy todir="build/dist/jmol-${version}/tools" >
+      <fileset dir="tools" />
+    </copy>
+
+    <!-- 
+    <copy file="build/Jvxl.jar" tofile="build/dist/Jvxl-${jvxl_version}.jar" failonerror="false" />
+
+    <copy   file="build/doc/JmolDevelopersGuide.html"
+            tofile="build/dist/jmol-${version}/doc/JmolDevelopersGuide.html" />
+    <copy   file="build/doc/JmolHistory/ChangeLog.html"
+            tofile="build/dist/jmol-${version}/ChangeLog.html" />
+    <copy todir="build/dist/jmol-${version}/doc/JmolUserGuide">
+      <fileset dir="build/doc/JmolUserGuide">
+        <include name="**/*.html" />
+      </fileset>
+    </copy>
+    <copy   file="build/doc/JmolAppletGuide.html"
+            tofile="build/dist/jmol-${version}/doc/JmolAppletGuide.html" />
+-->
+<!--
+    zip distributions to not retain file permissions
+    <zip zipfile="build/dist/jmol-${version}-full.zip" basedir="build/dist"
+         includes="jmol-${version}/**" />
+    -->
+
+    <tar tarfile="build/dist/jmol-${version}-full.tar.gz"
+         compression="gzip" >
+      <tarfileset dir="build/dist"
+                  excludes="*/jmol,*/jmol.sh"
+                  includes="jmol-${version}/**" />
+      <tarfileset dir="build/dist/jmol-${version}"
+                  mode="755"
+                  includes="jmol,jmol.sh" />
+    </tar>
+
+    <!-- Copy other files to have a complete distribution -->
+  	<copy file="build/Jmol.jar" tofile="build/dist/Jmol.jar" />
+    <copy file="tools/pom.xml.template" tofile="build/dist/pom.xml.template" />
+		
+	<!-- 	
+    <jar jarfile="build/dist/jmol-${version}-javadoc.jar">
+      <fileset dir="build/javadoc" />
+    </jar>
+    
+    -->
+    <jar jarfile="build/dist/jmol-${version}-sources.jar">
+      <fileset dir="src" />
+    </jar>
+	<copy file="src/org/jmol/viewer/Jmol.properties" tofile="build/dist/Jmol.properties" />
+
+	    <input
+	      message="Destination Path for ${version} (clear to exit)"
+	      defaultvalue="${path.release}/${prefix.release}${versionMajorMinorPatch}"
+	      addproperty="uploadPath"
+	    />
+
+	
+	    <!-- Prepare temporary image -->
+	    <delete dir="${temp.dir}" />
+	    <mkdir dir="${temp.dir}" />
+	    <mkdir dir="${temp.dir}/${uploadPath}" />
+	  	
+	  	<echo>sendzip is ${sendZip}</echo>
+	  	
+	  	<if>
+	     <equals arg1="${sendZip}" arg2="true" />
+	  	 <then>
+	  	  	<echo>creating  ${temp.dir}/${uploadPath}/README-${version}.properties</echo>
+	    <copy todir="${temp.dir}/${uploadPath}"
+	          file="${dist.dir}/Jmol-${version}-binary.zip" />
+	    <copy tofile="${temp.dir}/${uploadPath}/README-${version}.properties"
+	          file="${dist.dir}/Jmol.properties" />
+	    </then>
+	  	</if>
+	  	<if>
+	     <equals arg1="${pathdir}" arg2="${pathdir-full}" />
+	  	 <then>
+		    <copy todir="${temp.dir}/${uploadPath}"
+		          file="${dist.dir}/Jmol-${version}-binary.tar.gz" />
+		    <copy todir="${temp.dir}/${uploadPath}"
+		          file="${dist.dir}/Jmol-${version}-full.tar.gz" />
+	  	 </then>
+	  	</if>
+
+	</target>
+
+  <target name="clean-after-dist" id="clean-after-dist">
+    <delete dir="build" includeemptydirs="true">
+      <exclude name="dist/**/*"/>
+      <exclude name="doc/**/*"/>
+    </delete>
+    <delete dir="build/dist/jmol-${version}"/>
+  </target>
+
+	  <!-- Contributions -->
+	  <taskdef resource="net/sf/antcontrib/antlib.xml">
+	    <classpath>
+	      <pathelement location="tools/ant-contrib.jar" />
+	    </classpath>
+	  </taskdef>
+
+		
+	  <property name="sendZip"         value="true" />
+	  <property name="dist.dir"        value="build/dist" />
+	  <property name="src.dir"         value="src" />
+	  <property name="temp.dir"        value="build/release" />
+	  <property name="web.dir"         value="/home/frs/project/j/jm/jmol" />
+	  <property name="web.host"        value="frs.sourceforge.net" /> 
+	  <property name="prefix.release"  value="Jmol " />
+
+	  <echo message="${dist.dir}" />
+		
+	<!--
+
+	12/17/2016	
+	Release Note: switching to semantic versioning (http://semver.org/)
+	Release Note: When releasing stable version, remove "-beta"
+		
+	-->
+		
+		
+	  <property file="${dist.dir}/Jmol.properties" prefix="Jmol.properties" />
+	  <property name="version" value="${Jmol.properties.Jmol.___JmolVersion}" />
+	  <propertyregex property="version"
+		  override = "true"
+		  input="${version}"
+		  regexp='(")([^"]+)(")'
+	  	  select="\2"
+	      global="true"
+	  />
+	  <echo message="version=${version}" />
+
+		<loadresource property="versionMajorMinor">
+		  <string value="${version}"/>
+		  <filterchain>
+		    <tokenfilter>
+			      <replaceregex pattern="([0-9]+[.][0-9]+)(.*)" replace="\1"/>
+		    </tokenfilter>
+		  </filterchain>
+		</loadresource>
+		<echo message="versionMajorMinor: ${versionMajorMinor}"/>
+		
+		<loadresource property="versionMajorMinorPatch">
+		  <string value="${version}"/>
+		  <filterchain>
+		    <tokenfilter>
+			      <replaceregex pattern="([^-]*)(-beta)(.*)" replace="\1"/>
+		    </tokenfilter>
+		  </filterchain>
+		</loadresource>
+		<echo message="versionMajorMinorPatch: ${versionMajorMinorPatch}"/>
+
+			<loadresource property="betaFlag">
+		  <string value="${version}"/>
+		  <filterchain>
+		    <tokenfilter>
+		      <replaceregex pattern="([^-]*)(-beta)(.*)" replace="\2"/>
+		    </tokenfilter>
+		  </filterchain>
+		</loadresource>
+		<property name="pathdir-full" value="Jmol/Version" />
+	  	<if>
+	     <equals arg1="${betaFlag}" arg2="${version}" />
+	  	 <then>
+	  		<property name="pathdir"    value="${pathdir-full}" />
+	    </then>
+	  	<else>
+	  		<property name="pathdir"    value="Jmol-beta/Jmol" />
+	  	</else>
+	  	</if>
+		<echo message="betaFlag: ${betaFlag}"/>
+
+		<property name="path.release"    value="${pathdir} ${versionMajorMinor}" />
+		<echo message="path.release: ${path.release}"/>
+
+</project>

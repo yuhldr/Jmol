@@ -1,0 +1,127 @@
+<project name="JSmol" default="jsmol-to-site" basedir=".">
+ 
+	   <property name="site.dir" value="site" />
+	   <property name="site.jsmol.path" value="site/jsmol" />
+	   <property name="site.jsmol.j2s.path" value="site/jsmol/j2s" />
+       <property name="site-resources.dir" value="site-resources" />  	  	
+       <property name="site-resources-zip.dir" value="site-resources-zip" />  	  	
+  	   <property name="tools.dir" value = "tools" />
+
+    <property name="resources.dir" value="resources" />
+
+  <target name="jsmol-to-site" id="jsmol-to-site">
+ 		
+   	<echo>Deleting the site directory.</echo>
+	 	<delete quiet="true" dir="${site.dir}" />
+
+
+	<!-- pull Jmol.properties key info -->
+  	<echo>copying Jmol.properties</echo>
+	<copy overwrite="true" todir="build" >
+	  <fileset dir="src/org/jmol/viewer/">
+	    <include name="Jmol.properties" />
+	  </fileset>
+	  <filterchain>
+	    <striplinecomments>
+	      <comment value="#" />
+	    </striplinecomments>
+	    <linecontains>
+	      <contains value="Jmol.___" />
+	    </linecontains>
+	  </filterchain>
+	</copy>
+	<copy overwrite="true" file="build/Jmol.properties" tofile="Jmol.properties" />
+	<copy overwrite="true" file="build/Jmol.properties" tofile="${site.jsmol.j2s.path}/Jmol.properties" />
+    <property file="Jmol.properties" prefix="Jmol.properties" />
+    <echo message="version=${Jmol.properties.Jmol.___JmolVersion}" />
+
+  	
+ 	    <!-- <for  ...> construct needs ant-contrib.jar -->
+ 	    <taskdef resource="net/sf/antcontrib/antlib.xml">
+ 	      <classpath>
+ 	        <pathelement location="${tools.dir}/ant-contrib.jar" />
+ 	      </classpath>
+ 	    </taskdef>
+
+ 	   	
+ 	   	<echo>unzipping j2s java js code from jmol-j2s-site.zip</echo>
+ 	  	<for param="file.zip">
+ 	  	  <path>
+ 	  	    <fileset dir="${site-resources-zip.dir}" includes="*.zip"/>
+ 	  	  </path>
+ 	  	  <sequential>
+ 	  	  	 	<unzip src="@{file.zip}" dest="${site.dir}" overwrite="true"/>  	
+ 	  	  </sequential>
+ 	  	</for>
+
+ 	  	<echo>copying site-resources/ files (HMTL, JavaScript)</echo>
+ 	    <copy overwrite="true" todir="${site.dir}" >
+ 	      <fileset dir="${site-resources.dir}">
+ 	      </fileset>
+ 	    </copy>
+  	
+ 	   	<!-- create jquery.min.js -->
+
+ 	   	<java jar="${tools.dir}/closure_compiler.jar" fork="true" dir="${site.jsmol.path}/jquery" failonerror="false">
+ 	   		<arg line="--js jquery.js --charset UTF-8 --js_output_file jquery.min.js" />
+ 	    </java>
+
+ 	   	<!--
+ 	   	<echo>......adding jsme event hooks</echo>
+ 	  	<replace dir="${site.jsmol.path}/jsme/jsme" includes="*.html" token="var c=arguments,d;" value="var c=arguments,d;if(!(d=(!c||!c[0]||!$wnd.Jmol?a:$wnd.Jmol._jmeHook(a, c[0]))))return;"/>
+ 	   	-->
+ 	   	
+ 	   	
+    	<!-- minimize JSmol JavaScript -->
+    	
+    	<echo>...creating JSmol.min.js -- the standard set, including jQuery</echo>
+     <antcall target="call-min">
+         <param name="call-min.fullname" value="full" />
+         <param name="call-min.minname" value="min" />
+         <param name="call-min.list" value="
+         	../jquery/jquery.js
+        		JSmoljQueryExt.js
+        		JSmolCore.js
+       		JSmolDebugOff.js
+        		JSmol.js
+        		JSmolApplet.js
+        		JSmolControls.js
+        		JSmolApi.js
+        		j2sjmol.js
+         " />
+     </antcall>
+
+ 	  	<move file="${site.jsmol.path}/JSmol.min.js" tofile="${site.jsmol.path}/JSmol.min0.js"/>
+ 	  	<copy file="${site.jsmol.path}/js/JSmol.full.js" tofile="${site.jsmol.path}/JSmol.min.js"/>
+
+	<echo>...creating ${site.jsmol.path}/j2s/core/corejmoldebug.js</echo>
+	<!-- JSmolJavaExt.js is from the java2script 4.2 transplier code, in site-resources-zip/Jmol-j2s-size.zip -->
+   	<concat destfile="${site.jsmol.path}/j2s/core/corejmoldebug.js">
+   		<filelist dir="${site.jsmol.j2s.path}" files="
+       		Jmol.properties
+       		../js/JSmolJavaExt.js
+   		" />
+   	</concat>
+
+  	<path id="projectPath" location="." />
+  	<pathconvert property="projectDir" refid="projectPath"/>
+  	<echo>NOTE!</echo>
+  	<echo>NOTE!</echo>
+  	<echo>NOTE!${site.dir} has been recreated from scratch. Do a clean build to add Jmol code.</echo>
+  	<echo>NOTE!You can start JSmol in debug mode by opening site/jsmol_dev.htm, or use the ?j2sdebugcode flag</echo>
+  	<echo>NOTE!in an external browser configured to open local files.</echo>
+ 	   		
+    </target>
+ 		
+   <target name="call-min" id="call-min">
+    	<echo>......Creating JSmol.${call-min.minname}.js</echo> 	
+    	<concat destfile="${site.jsmol.path}/js/JSmol.${call-min.fullname}.js">
+    		<filelist dir="${site.jsmol.path}/js" files="${call-min.list}" />
+    	</concat>   
+    	<java jar="${tools.dir}/closure_compiler.jar" fork="true" dir="" failonerror="false">
+    		<arg line="--js ${site.jsmol.path}/js/JSmol.${call-min.fullname}.js --js_output_file ${site.jsmol.path}/JSmol.${call-min.minname}.js" />
+     </java>
+   </target>
+ 	
+ 	
+</project>

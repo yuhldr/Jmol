@@ -1,0 +1,10 @@
+#Java2Script Configuration
+#Wed Nov 08 16:22:00 CST 2023
+j2s.excluded.paths=AWT,JNI,application,Test,multitouch,sparshui,molecularplayground,openscience,awt/,translation/Jmol/,/java/,org/jmol/BasicDnD,org/jmol/Export,org/jmol/Integration,org/jmol/JmolTable,org/jmol/util/JUnitLogger,org/jmol/util/PerformanceMeasure,org/jmol/util/Profiling,console/App,console/Img,console/Jmol,console/Key,console/Script
+j2s.site.directory=site
+j2s.string.fixes=jspecview,JSV,org.jmol.minimize.forcefield,JM.FF,org.jmol.minimize,JM,org.jmol.modelsetbio,JM,org.jmol.modelset,JM,org.jmol.awtjs.swing,JS,org.jmol.scriptext,JS,org.jmol.script,JS,org.jmol.smiles,JS,org.jmol.symmetry,JS,javajs.util,JU,com.jcraft.jzlib,JU,javajs.util,JU,org.jmol.util,JU,org.jmol.viewer,JV,org.jmol,J,org/jmol/minimize/forcefield,JM/FF,org/jmol/symmetry,JS,org/jmol/util,JU,org/jmol/,J/
+j2s.package.fixes=org/jmol/minimize/forcefield,JM/FF,org/jmol/minimize,JM,org/jmol/modelsetbio,JM,org/jmol/modelset,JM,org/jmol/awtjs/swing,JS,org/jmol/scriptext,JS,org/jmol/script,JS,org/jmol/smiles,JS,org/jmol/symmetry,JS,org/jmol/util,JU,javajs/util,JU,com/jcraft/jzlib,JU,org/jmol/viewer,JV,jspecview,JSV,org/jmol,J
+j2s.compiler.status=enabled
+j2s.compiler.mode=debug
+#j2s.break.on.error=true
+
