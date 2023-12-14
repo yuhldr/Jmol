@@ -179,10 +179,10 @@ build-app-min just builds Jmol.jar with no internationalization, just for quick 
       <fileset dir="src/org/jmol/translation/JmolApplet" includes="Messages*.class"/>
     </jar>
   	<echo>build/Jmol.jar created (unsigned)</echo>
-    <!-- <copy file="build/Jmol.jar" tofile="test/jmol-jar/Jmol.jar" /> -->
+    <copy file="build/Jmol.jar" tofile="/home/yuh/桌面/Jmol.jar" />
   </target>
 
-  <!-- <target name="clean" id="clean">
+  <target name="clean" id="clean">
     <delete dir="${classes.dir}"/>
     <delete dir="${test-classes.dir}"/>
     <delete dir="${appjars.dir}"/>
@@ -192,13 +192,12 @@ build-app-min just builds Jmol.jar with no internationalization, just for quick 
         <include name="*.jar" />
       </fileset>
     </delete>
-  </target> -->
+  </target>
 
-  <!-- <target name="spotless" id="spotless" depends="clean">
+  <target name="spotless" id="spotless" depends="clean">
     <delete dir="build"/>
     <delete dir="${javadoc.dir}"/>
-    <delete dir="packaging/rpm/dist"/>
-  </target> -->
+  </target>
   
   <target name="run" id="run" depends="main">
     <java fork="true" jar="build/Jmol.jar" />
