@@ -39,7 +39,7 @@ public class SimpleTreeNode implements JSVTreeNode {
 		}
 
 		@Override
-    public Enumeration<JSVTreeNode> children() {
+    public Enumeration<JSVTreeNode> children2() {
 			return new SimpleTreeEnumeration(this);
 		}
 

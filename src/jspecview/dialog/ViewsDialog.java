@@ -74,7 +74,7 @@ public class ViewsDialog extends JSVDialog {
   }
 
 	private void addCheckBoxes(JSVTreeNode rootNode, int level, boolean isViews) {
-		Enumeration<JSVTreeNode> enume = rootNode.children();
+		Enumeration<JSVTreeNode> enume = rootNode.children2();
     while (enume.hasMoreElements()) {
       JSVTreeNode treeNode = enume.nextElement();
     	PanelNode node = treeNode.getPanelNode();
@@ -122,7 +122,7 @@ public class ViewsDialog extends JSVDialog {
 				node.getPanelNode().isSelected = true;
 				checking = false;
 			}
-			Enumeration<JSVTreeNode> enume = node.children();
+			Enumeration<JSVTreeNode> enume = node.children2();
 			while (enume.hasMoreElements()) {
 				JSVTreeNode treeNode = enume.nextElement();
 				dialog.setSelected(checkBoxes.get(treeNode.getIndex()), isSelected);

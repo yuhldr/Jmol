@@ -17,7 +17,7 @@ public interface JSVTreeNode {
 
 	PanelNode getPanelNode();
 
-	Enumeration<JSVTreeNode> children();
+	Enumeration<JSVTreeNode> children2();
 
 	int getIndex();
 

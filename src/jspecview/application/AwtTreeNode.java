@@ -1,11 +1,12 @@
 package jspecview.application;
 
+import java.util.Enumeration;
+
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import jspecview.api.JSVTreeNode;
 import jspecview.common.PanelNode;
 
-@SuppressWarnings("unchecked")
 public class AwtTreeNode extends
 	DefaultMutableTreeNode implements JSVTreeNode {
 
@@ -33,6 +34,11 @@ public class AwtTreeNode extends
 		@Override
 		public void setIndex(int index) {
 			this.index = index;
+		}
+
+		@Override
+		public Enumeration<JSVTreeNode> children2(){
+			return null;
 		}
 
 
