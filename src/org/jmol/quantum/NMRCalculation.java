@@ -539,15 +539,15 @@ public class NMRCalculation implements JmolNMRInterface {
     // Values taken from www.spectroscopynow.com/Spy/tools/proton-proton.html website. Need to find original source
     // 2.20 is eneg of H
     double enegH = 2.20;
-    deltaElectro.put("C", new Double(2.60 - enegH));
-    deltaElectro.put("O", new Double(3.50 - enegH));
-    deltaElectro.put("N", new Double(3.05 - enegH));
-    deltaElectro.put("F", new Double(3.90 - enegH));
-    deltaElectro.put("Cl", new Double(3.15 - enegH));
-    deltaElectro.put("Br", new Double(2.95 - enegH));
-    deltaElectro.put("I", new Double(2.65 - enegH));
-    deltaElectro.put("S", new Double(2.58 - enegH));// Pauling
-    deltaElectro.put("Si", new Double(1.90 - enegH));// Pauling
+    deltaElectro.put("C", Double.valueOf(2.60 - enegH));
+    deltaElectro.put("O", Double.valueOf(3.50 - enegH));
+    deltaElectro.put("N", Double.valueOf(3.05 - enegH));
+    deltaElectro.put("F", Double.valueOf(3.90 - enegH));
+    deltaElectro.put("Cl", Double.valueOf(3.15 - enegH));
+    deltaElectro.put("Br", Double.valueOf(2.95 - enegH));
+    deltaElectro.put("I", Double.valueOf(2.65 - enegH));
+    deltaElectro.put("S", Double.valueOf(2.58 - enegH));// Pauling
+    deltaElectro.put("Si", Double.valueOf(1.90 - enegH));// Pauling
   }
 
   static double[][] pAltona = new double[5][8];

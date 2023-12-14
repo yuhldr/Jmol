@@ -444,7 +444,7 @@ public class CoupleTable extends JTabbedPane {
   //  private double getdegfromString(String sDist) {
   //    int l = sDist.length();
   //    String spDist = sDist.substring(0, l - 1);
-  //    Double dDist = new Double(spDist);
+  //    Double dDist = Double.valueOf(spDist);
   //    return dDist.doubleValue();
   //  }
 

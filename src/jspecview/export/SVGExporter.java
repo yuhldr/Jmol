@@ -126,7 +126,7 @@ public class SVGExporter extends FormExporter {
 		int topPlotArea = topInset;
 		int bottomPlotArea = topInset + plotAreaHeight;
 		int titlePosition = bottomPlotArea + 60;
-		context.put("titlePosition", new Integer(titlePosition));
+		context.put("titlePosition", Integer.valueOf(titlePosition));
 
 		double xPt, yPt;
 		String xStr, yStr;
@@ -239,25 +239,25 @@ public class SVGExporter extends FormExporter {
 		context.put("scaleColor", toRGBHexString(scaleColor));
 		context.put("unitsColor", toRGBHexString(unitsColor));
 
-		context.put("svgHeight", new Integer(svgHeight));
-		context.put("svgWidth", new Integer(svgWidth));
-		context.put("leftPlotArea", new Integer(leftPlotArea));
-		context.put("rightPlotArea", new Integer(rightPlotArea));
-		context.put("topPlotArea", new Integer(topPlotArea));
-		context.put("bottomPlotArea", new Integer(bottomPlotArea));
-		context.put("plotAreaHeight", new Integer(plotAreaHeight));
-		context.put("plotAreaWidth", new Integer(plotAreaWidth));
+		context.put("svgHeight", Integer.valueOf(svgHeight));
+		context.put("svgWidth", Integer.valueOf(svgWidth));
+		context.put("leftPlotArea", Integer.valueOf(leftPlotArea));
+		context.put("rightPlotArea", Integer.valueOf(rightPlotArea));
+		context.put("topPlotArea", Integer.valueOf(topPlotArea));
+		context.put("bottomPlotArea", Integer.valueOf(bottomPlotArea));
+		context.put("plotAreaHeight", Integer.valueOf(plotAreaHeight));
+		context.put("plotAreaWidth", Integer.valueOf(plotAreaWidth));
 
-		context.put("minXOnScale", new Double(minXOnScale));
-		context.put("maxXOnScale", new Double(maxXOnScale));
-		context.put("minYOnScale", new Double(minYOnScale));
-		context.put("maxYOnScale", new Double(maxYOnScale));
-		context.put("yTickA", new Double(yTickA));
-		context.put("yTickB", new Double(yTickB));
-		context.put("xScaleFactor", new Double(xScaleFactor));
-		context.put("yScaleFactor", new Double(yScaleFactor));
+		context.put("minXOnScale", Double.valueOf(minXOnScale));
+		context.put("maxXOnScale", Double.valueOf(maxXOnScale));
+		context.put("minYOnScale", Double.valueOf(minYOnScale));
+		context.put("maxYOnScale", Double.valueOf(maxYOnScale));
+		context.put("yTickA", Double.valueOf(yTickA));
+		context.put("yTickB", Double.valueOf(yTickB));
+		context.put("xScaleFactor", Double.valueOf(xScaleFactor));
+		context.put("yScaleFactor", Double.valueOf(yScaleFactor));
 
-		context.put("increasing", new Boolean(increasing));
+		context.put("increasing", Boolean.valueOf(increasing));
 
 		context.put("verticalGridCoords", vertGridCoords);
 		context.put("horizontalGridCoords", horizGridCoords);
@@ -274,13 +274,13 @@ public class SVGExporter extends FormExporter {
 		System.out.println("SVG " + spec.isXIncreasing() + " " + spec.shouldDisplayXAxisIncreasing() + " " + firstX + " "+ lastX + " " + startIndex + " " + endIndex + " " + newXYCoords.get(0).toString() + " " + increasing);
 		context.put("title", spec.getTitle());
 		context.put("xyCoords", newXYCoords);
-		context.put("continuous", new Boolean(spec.isContinuous()));
-		context.put("firstTranslateX", new Double(firstTranslateX));
-		context.put("firstTranslateY", new Double(firstTranslateY));
-		context.put("scaleX", new Double(scaleX));
-		context.put("scaleY", new Double(scaleY));
-		context.put("secondTranslateX", new Double(secondTranslateX));
-		context.put("secondTranslateY", new Double(secondTranslateY));
+		context.put("continuous", Boolean.valueOf(spec.isContinuous()));
+		context.put("firstTranslateX", Double.valueOf(firstTranslateX));
+		context.put("firstTranslateY", Double.valueOf(firstTranslateY));
+		context.put("scaleX", Double.valueOf(scaleX));
+		context.put("scaleY", Double.valueOf(scaleY));
+		context.put("secondTranslateX", Double.valueOf(secondTranslateX));
+		context.put("secondTranslateY", Double.valueOf(secondTranslateY));
     context.put("plotStrokeWidth", getPlotStrokeWidth(scaleX, scaleY));
 
 		if (increasing) {
@@ -310,9 +310,11 @@ public class SVGExporter extends FormExporter {
 		context.put("yUnitLabelX", "" + yUnitLabelX);
 		context.put("yUnitLabelY", "" + yUnitLabelY);
 
-		context.put("numDecimalPlacesX", new Integer(Math
+		context.put("numDecimalPlacesX", 
+        Integer.valueOf(Math
 				.abs(scaleData.exportPrecision[0])));
-		context.put("numDecimalPlacesY", new Integer(Math
+		context.put("numDecimalPlacesY", 
+        Integer.valueOf(Math
 				.abs(scaleData.exportPrecision[1])));
 
 		String vm = (mode == ExportType.SVGI ? "plot_ink.vm" : "plot.vm");
@@ -572,21 +574,21 @@ public class SVGExporter extends FormExporter {
     context.put("scaleColor", AppUtils.colorToHexString(scaleColor));
     context.put("unitsColor", AppUtils.colorToHexString(unitsColor));
 
-    context.put("svgHeight", new Integer(svgHeight));
-    context.put("svgWidth", new Integer(svgWidth));
-    context.put("leftPlotArea", new Integer(leftPlotArea));
-    context.put("rightPlotArea", new Integer(rightPlotArea));
-    context.put("topPlotArea", new Integer(topPlotArea));
-    context.put("bottomPlotArea", new Integer(bottomPlotArea));
-    context.put("plotAreaHeight", new Integer(plotAreaHeight));
-    context.put("plotAreaWidth", new Integer(plotAreaWidth));
+    context.put("svgHeight", Integer.valueOf(svgHeight));
+    context.put("svgWidth", Integer.valueOf(svgWidth));
+    context.put("leftPlotArea", Integer.valueOf(leftPlotArea));
+    context.put("rightPlotArea", Integer.valueOf(rightPlotArea));
+    context.put("topPlotArea", Integer.valueOf(topPlotArea));
+    context.put("bottomPlotArea", Integer.valueOf(bottomPlotArea));
+    context.put("plotAreaHeight", Integer.valueOf(plotAreaHeight));
+    context.put("plotAreaWidth", Integer.valueOf(plotAreaWidth));
 
-    context.put("minXOnScale", new Double(minXOnScale));
-    context.put("maxXOnScale", new Double(maxXOnScale));
-    context.put("minYOnScale", new Double(minYOnScale));
-    context.put("maxYOnScale", new Double(maxYOnScale));
-    context.put("xScaleFactor", new Double(xScaleFactor));
-    context.put("yScaleFactor", new Double(yScaleFactor));
+    context.put("minXOnScale", Double.valueOf(minXOnScale));
+    context.put("maxXOnScale", Double.valueOf(maxXOnScale));
+    context.put("minYOnScale", Double.valueOf(minYOnScale));
+    context.put("maxYOnScale", Double.valueOf(maxYOnScale));
+    context.put("xScaleFactor", Double.valueOf(xScaleFactor));
+    context.put("yScaleFactor", Double.valueOf(yScaleFactor));
 
     context.put("increasing", new Boolean(increasing));
 
@@ -606,12 +608,12 @@ public class SVGExporter extends FormExporter {
     context.put("title", title);
     context.put("xyCoords", newXYCoordsList);
     context.put("continuous", new Boolean(continuous));
-    context.put("firstTranslateX", new Double(firstTranslateX));
-    context.put("firstTranslateY", new Double(firstTranslateY));
-    context.put("scaleX", new Double(scaleX));
-    context.put("scaleY", new Double(scaleY));
-    context.put("secondTranslateX", new Double(secondTranslateX));
-    context.put("secondTranslateY", new Double(secondTranslateY));
+    context.put("firstTranslateX", Double.valueOf(firstTranslateX));
+    context.put("firstTranslateY", Double.valueOf(firstTranslateY));
+    context.put("scaleX", Double.valueOf(scaleX));
+    context.put("scaleY", Double.valueOf(scaleY));
+    context.put("secondTranslateX", Double.valueOf(secondTranslateX));
+    context.put("secondTranslateY", Double.valueOf(secondTranslateY));
 
     if (increasing) {
       context.put("xScaleList", xScaleList);
@@ -625,8 +627,8 @@ public class SVGExporter extends FormExporter {
     context.put("xUnits", xUnits);
     context.put("yUnits", yUnits);
 
-    context.put("numDecimalPlacesX", new Integer(Math.abs(hashNumX)));
-    context.put("numDecimalPlacesY", new Integer(Math.abs(hashNumY)));
+    context.put("numDecimalPlacesX", Integer.valueOf(Math.abs(hashNumX)));
+    context.put("numDecimalPlacesY", Integer.valueOf(Math.abs(hashNumY)));
 
     String vm = (exportForInkscape ? "plot_ink.vm" : "plot.vm");
     Logger.info("SVGExport using " + vm);

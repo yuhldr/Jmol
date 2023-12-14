@@ -1314,7 +1314,7 @@ public class PanelData implements EventManager {
 			if (useFileName)
 				title = JSVFileManager.getTagName(spectrum.getFilePath()) + " - " + title;
 			GenericColor plotColor = getCurrentPlotColor(index);
-			cols[0] = new Integer(index + 1);
+			cols[0] = Integer.valueOf(index + 1);
 			cols[1] = plotColor;
 			cols[2] = " " + title;
 			data[index] = cols;

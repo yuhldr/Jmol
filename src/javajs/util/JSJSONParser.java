@@ -167,7 +167,7 @@ public class JSJSONParser {
       try {
         if (string.indexOf('.') < 0 && string.indexOf('e') < 0
             && string.indexOf('E') < 0)
-          return new Integer(string);
+          return Integer.valueOf(string);
         // not allowing infinity or NaN
         // using float here because Jmol does not use Double
         Float d = Float.valueOf(string);

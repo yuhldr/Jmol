@@ -588,7 +588,7 @@ public abstract class JMEUtil {
 			number = 0.; // 2012 fix 1.0E-4
 		double m = Math.pow(10, dec);
 		number = (int) Math.round(number * m) / m;
-		String s = new Double(number).toString(); // this sometimes return 1.0E-4
+		String s = Double.valueOf(number).toString(); // this sometimes return 1.0E-4
 		int dotpos = s.indexOf('.');
 		if (dotpos < 0) {
 			s += ".";

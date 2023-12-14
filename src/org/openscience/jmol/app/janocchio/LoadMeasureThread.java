@@ -89,10 +89,10 @@ public class LoadMeasureThread extends Thread {
       if (line.trim().length() == 0)
         break;
       String[] l = line.split("\\s+");
-      int ia = (new Integer(l[0])).intValue();
-      int ib = (new Integer(l[1])).intValue();
-      int ic = (new Integer(l[2])).intValue();
-      int id = (new Integer(l[3])).intValue();
+      int ia = Integer.parseInt(l[0]);
+      int ib = Integer.parseInt(l[1]);
+      int ic = Integer.parseInt(l[2]);
+      int id = Integer.parseInt(l[3]);
       addCouple(ia, ib, ic, id, l[4]);
     }
   }
@@ -117,8 +117,8 @@ public class LoadMeasureThread extends Thread {
     // ia ib one-word-label
     while ((line = inp.readLine()).trim().length() != 0) {
       String[] l = line.split("\\s+");
-      int ia = (new Integer(l[0])).intValue();
-      int ib = (new Integer(l[1])).intValue();
+      int ia = Integer.parseInt(l[0]);
+      int ib = Integer.parseInt(l[1]);
       addNOE(ia, ib, l[2], null);
     }
   }
@@ -141,7 +141,7 @@ public class LoadMeasureThread extends Thread {
     String line;
     while ((line = inp.readLine()).trim().length() != 0) {
       String[] l = line.split("\\s+");
-      int i = (new Integer(l[0])).intValue();
+      int i = Integer.parseInt(l[0]);
       command += ";" + nmrPanel.labelSetter.setLabel(i - 1, l[1]);
     }
     return true;

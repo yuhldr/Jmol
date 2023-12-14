@@ -753,9 +753,9 @@ public class NMR_JmolPanel extends JmolPanel {
 
       while ((line = inp.readLine()).trim().length() != 0) {
         String[] l = line.split("[()=\\s]+");
+        int i = Integer.parseInt(l[1]);
 
-        int i = (new Integer(l[1])).intValue();
-        double p = (new Double(l[2])).doubleValue();
+        double p = Double.parseDouble(l[2]);
 
         population[i] = p;
       }

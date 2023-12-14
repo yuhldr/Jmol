@@ -1087,7 +1087,8 @@ public class XtalSymmetry {
             if (ch == null) {
               if (disorderMapMax == 0 || disorderMapMax == 'Z')
                 disorderMapMax = (int) '@'; // necessary for legacy java2script JSmol
-              disorderMap.put(key, ch = new Character((char) (++disorderMapMax)));
+              disorderMap.put(key, ch = Character
+                  .valueOf((char) (++disorderMapMax)));
             }
             atom1.altLoc = ch.charValue();
           }

@@ -551,7 +551,7 @@ public class NoeTable extends JTabbedPane {
   //    String[] splitDist = sDist.split(" ");
   //    Double dDist = null;
   //    if (splitDist[1].equals("nm")) {
-  //       dDist = new Double(splitDist[0]);
+  //       dDist = Double.valueOf(splitDist[0]);
   //    }
   //    else {           
   //      System.out.println("Distance not in nm");

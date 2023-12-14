@@ -264,8 +264,8 @@ public class LoadMeasureThreadJSON extends LoadMeasureThread {
           if (noe.containsKey("expd")) {
             String exp = (String) noe.get("expd");
             if (exp != null) {
-              int j = (new Integer(a)).intValue() - 1;
-              int k = (new Integer(b)).intValue() - 1;
+              int j = Integer.parseInt(a) - 1;
+              int k = Integer.parseInt(b) - 1;
               props.addJmolDistance(j + base, k + base);
             }
           }
@@ -280,10 +280,10 @@ public class LoadMeasureThreadJSON extends LoadMeasureThread {
           if (couple.containsKey("exp")) {
             String exp = (String) couple.get("exp");
             if (exp != null) {
-              int j = (new Integer(a)).intValue() - 1;
-              int k = (new Integer(b)).intValue() - 1;
-              int l = (new Integer(c)).intValue() - 1;
-              int m = (new Integer(d)).intValue() - 1;
+              int j = Integer.parseInt(a) - 1;
+              int k = Integer.parseInt(b) - 1;
+              int l = Integer.parseInt(c) - 1;
+              int m = Integer.parseInt(d) - 1;
               props.addJmolCouple(j + base, k + base, l + base, m + base);
             }
           }
@@ -291,11 +291,11 @@ public class LoadMeasureThreadJSON extends LoadMeasureThread {
         // NAMFIS has problems on some systems if there are zero noes or couplings
         // Always add dummy variable
         Vector<Double> vec = props.getDistances();
-        vec.add(new Double(1.0));
+        vec.add(Double.valueOf(1.0));
         writeVector(vec, out1);
 
         vec = props.getCouples();
-        vec.add(new Double(1.0));
+        vec.add(Double.valueOf(1.0));
         writeVector(vec, out1);
 
       }
@@ -523,8 +523,8 @@ public class LoadMeasureThreadJSON extends LoadMeasureThread {
 
     int[] noeNPrefIndices = noeTable.getnoeNPrefIndices();
     Map<String, Object> refNOE = new Hashtable<String, Object>();
-    refNOE.put("a", new Integer(noeNPrefIndices[0]));
-    refNOE.put("b", new Integer(noeNPrefIndices[1]));
+    refNOE.put("a", Integer.valueOf(noeNPrefIndices[0]));
+    refNOE.put("b", Integer.valueOf(noeNPrefIndices[1]));
     data.put("RefNOE", refNOE);
 
     double noeExprefValue = noeTable.getNoeExprefValue();
@@ -594,8 +594,8 @@ public class LoadMeasureThreadJSON extends LoadMeasureThread {
           if (noe.containsKey("expd")) {
             String exp = (String) noe.get("expd");
             if (exp != null) {
-              int j = (new Integer(a)).intValue() - 1;
-              int k = (new Integer(b)).intValue() - 1;
+              int j = Integer.parseInt(a) - 1;
+              int k = Integer.parseInt(b) - 1;
               double cDist = props.getJmolDistance(j + base, k + base);
               MeasureDist measure = new MeasureDist(exp, cDist);
               diffDist += measure.getDiff();
@@ -604,8 +604,8 @@ public class LoadMeasureThreadJSON extends LoadMeasureThread {
           if (noe.containsKey("exp")) {
             String exp = (String) noe.get("exp");
             if (exp != null) {
-              int j = (new Integer(a)).intValue() - 1;
-              int k = (new Integer(b)).intValue() - 1;
+              int j = Integer.parseInt(a) - 1;
+              int k = Integer.parseInt(b) - 1;
               double cNoe = props.getJmolNoe(j + base, k + base);
               MeasureNoe measure = new MeasureNoe(exp, cNoe);
               diffNoe += measure.getDiff();
@@ -622,10 +622,11 @@ public class LoadMeasureThreadJSON extends LoadMeasureThread {
           if (couple.containsKey("exp")) {
             String exp = (String) couple.get("exp");
             if (exp != null) {
-              int j = (new Integer(a)).intValue() - 1;
-              int k = (new Integer(b)).intValue() - 1;
-              int l = (new Integer(c)).intValue() - 1;
-              int m = (new Integer(d)).intValue() - 1;
+              int j = Integer.parseInt(a) - 1;
+              int k = Integer.parseInt(b) - 1;
+              int l = Integer.parseInt(c) - 1;
+              int m = Integer.parseInt(d) - 1;
+
               double[] cCouple = props.calcJmolCouple(j + base, k + base, l + base, m + base);
               MeasureCouple measure = new MeasureCouple(exp, cCouple[1]);
               diffCouple += measure.getDiff();

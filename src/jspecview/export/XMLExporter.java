@@ -255,8 +255,8 @@ abstract class XMLExporter extends FormExporter {
     context.put("title", title);
     context.put("ident", ident);
     context.put("state", state);
-    context.put("firstX", new Double(firstX));
-    context.put("lastX", new Double(lastX));
+    context.put("firstX", Double.valueOf(firstX));
+    context.put("lastX", Double.valueOf(lastX));
     context.put("xyCoords", newXYCoords);
     context.put("xdata_type", "Float32");
     context.put("ydata_type", "Float32");
@@ -268,7 +268,7 @@ abstract class XMLExporter extends FormExporter {
     context.put("xUnitLabel", xUnitLabel);
     context.put("yUnitLabel", yUnitLabel);
     context.put("specinits", spectypeInitials);
-    context.put("deltaX", new Double(deltaX));
+    context.put("deltaX", Double.valueOf(deltaX));
     context.put("owner", owner);
     context.put("origin", origin);
     context.put("timestamp", longdate);
@@ -281,7 +281,7 @@ abstract class XMLExporter extends FormExporter {
     context.put("CASn", casName);
     context.put("mp", mp);
     context.put("bp", bp);
-    context.put("ObFreq", new Double(obFreq));
+    context.put("ObFreq", Double.valueOf(obFreq));
     context.put("ObNucleus", obNucleus);
     context.put("SolvName", solvName);
     context.put("SolvRef", solvRef);

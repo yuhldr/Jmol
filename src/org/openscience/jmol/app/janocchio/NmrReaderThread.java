@@ -88,7 +88,7 @@ class NmrReaderThread extends Thread {
       //labels
       while ((line = inp.readLine()).trim().length() != 0) {
         String[] l = line.split("\\s+");
-        int i = (new Integer(l[0])).intValue();
+        int i = Integer.parseInt(l[0]);
         String com = nmr.labelSetter.setLabel(i - 1, l[1]);
         command = command + ";" + com;
       }
@@ -102,8 +102,8 @@ class NmrReaderThread extends Thread {
         command = command + ";measure " + l[0] + " " + l[1];
         if (l[2] != null) {
           if (!l[2].equals("null")) {
-            int i = (new Integer(l[0])).intValue();
-            int j = (new Integer(l[1])).intValue();
+            int i = Integer.parseInt(l[0]);
+            int j = Integer.parseInt(l[1]);
             nmr.noeTable.setExpNoe(l[2], i - 1, j - 1);
           }
         }
@@ -118,8 +118,8 @@ class NmrReaderThread extends Thread {
             + l[3];
         if (l[4] != null) {
           if (!l[4].equals("null")) {
-            int i = (new Integer(l[0])).intValue();
-            int j = (new Integer(l[3])).intValue();
+            int i = Integer.parseInt(l[0]);
+            int j = Integer.parseInt(l[3]);
             nmr.coupleTable.setExpCouple(l[4], i - 1, j - 1);
           }
         }

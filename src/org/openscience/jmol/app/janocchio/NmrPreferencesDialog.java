@@ -362,7 +362,7 @@
 //		for (int i = 0; i <= 250; i += 50) {
 //			String label = "" + (1000 + i);
 //			label = "0." + label.substring(1);
-//			bwSlider.getLabelTable().put(new Integer(i), new JLabel(label, SwingConstants.CENTER));
+//			bwSlider.getLabelTable().put(Integer.valueOf(i), new JLabel(label, SwingConstants.CENTER));
 //			bwSlider.setLabelTable(bwSlider.getLabelTable());
 //		}
 //		bwSlider.addChangeListener(new ChangeListener() {
@@ -395,17 +395,17 @@
 //		btSlider.setMajorTickSpacing(20);
 //		btSlider.setMinorTickSpacing(10);
 //		btSlider.setPaintLabels(true);
-//		btSlider.getLabelTable().put(new Integer(0), new JLabel("0.0", SwingConstants.CENTER));
+//		btSlider.getLabelTable().put(Integer.valueOf(0), new JLabel("0.0", SwingConstants.CENTER));
 //		btSlider.setLabelTable(btSlider.getLabelTable());
-//		btSlider.getLabelTable().put(new Integer(20), new JLabel("0.2", SwingConstants.CENTER));
+//		btSlider.getLabelTable().put(Integer.valueOf(20), new JLabel("0.2", SwingConstants.CENTER));
 //		btSlider.setLabelTable(btSlider.getLabelTable());
-//		btSlider.getLabelTable().put(new Integer(40), new JLabel("0.4", SwingConstants.CENTER));
+//		btSlider.getLabelTable().put(Integer.valueOf(40), new JLabel("0.4", SwingConstants.CENTER));
 //		btSlider.setLabelTable(btSlider.getLabelTable());
-//		btSlider.getLabelTable().put(new Integer(60), new JLabel("0.6", SwingConstants.CENTER));
+//		btSlider.getLabelTable().put(Integer.valueOf(60), new JLabel("0.6", SwingConstants.CENTER));
 //		btSlider.setLabelTable(btSlider.getLabelTable());
-//		btSlider.getLabelTable().put(new Integer(80), new JLabel("0.8", SwingConstants.CENTER));
+//		btSlider.getLabelTable().put(Integer.valueOf(80), new JLabel("0.8", SwingConstants.CENTER));
 //		btSlider.setLabelTable(btSlider.getLabelTable());
-//		btSlider.getLabelTable().put(new Integer(100), new JLabel("1.0", SwingConstants.CENTER));
+//		btSlider.getLabelTable().put(Integer.valueOf(100), new JLabel("1.0", SwingConstants.CENTER));
 //		btSlider.setLabelTable(btSlider.getLabelTable());
 //
 //		btSlider.addChangeListener(new ChangeListener() {
@@ -438,17 +438,17 @@
 //		bdSlider.setMajorTickSpacing(20);
 //		bdSlider.setMinorTickSpacing(10);
 //		bdSlider.setPaintLabels(true);
-//		bdSlider.getLabelTable().put(new Integer(0), new JLabel("0.0", SwingConstants.CENTER));
+//		bdSlider.getLabelTable().put(Integer.valueOf(0), new JLabel("0.0", SwingConstants.CENTER));
 //		bdSlider.setLabelTable(bdSlider.getLabelTable());
-//		bdSlider.getLabelTable().put(new Integer(20), new JLabel("0.2", SwingConstants.CENTER));
+//		bdSlider.getLabelTable().put(Integer.valueOf(20), new JLabel("0.2", SwingConstants.CENTER));
 //		bdSlider.setLabelTable(bdSlider.getLabelTable());
-//		bdSlider.getLabelTable().put(new Integer(40), new JLabel("0.4", SwingConstants.CENTER));
+//		bdSlider.getLabelTable().put(Integer.valueOf(40), new JLabel("0.4", SwingConstants.CENTER));
 //		bdSlider.setLabelTable(bdSlider.getLabelTable());
-//		bdSlider.getLabelTable().put(new Integer(60), new JLabel("0.6", SwingConstants.CENTER));
+//		bdSlider.getLabelTable().put(Integer.valueOf(60), new JLabel("0.6", SwingConstants.CENTER));
 //		bdSlider.setLabelTable(bdSlider.getLabelTable());
-//		bdSlider.getLabelTable().put(new Integer(80), new JLabel("0.8", SwingConstants.CENTER));
+//		bdSlider.getLabelTable().put(Integer.valueOf(80), new JLabel("0.8", SwingConstants.CENTER));
 //		bdSlider.setLabelTable(bdSlider.getLabelTable());
-//		bdSlider.getLabelTable().put(new Integer(100), new JLabel("1.0", SwingConstants.CENTER));
+//		bdSlider.getLabelTable().put(Integer.valueOf(100), new JLabel("1.0", SwingConstants.CENTER));
 //		bdSlider.setLabelTable(bdSlider.getLabelTable());
 //
 //		bdSlider.addChangeListener(new ChangeListener() {

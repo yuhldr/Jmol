@@ -110,10 +110,10 @@ class FormContext {
         commandLevel++;
         if (token.indexOf("#if") == firstChar) {
           cmdType = VT_IF;
-          cmds.add(0, new Integer(ptr));
+          cmds.add(0, Integer.valueOf(ptr));
         } else if (token.indexOf("#foreach") == firstChar) {
           cmdType = VT_FOREACH;
-          cmds.add(0, new Integer(ptr));
+          cmds.add(0, Integer.valueOf(ptr));
           cmdPtr = ptr;
           if (token.indexOf("#end") > 0) {
             int pt = token.indexOf(")") + 1;
@@ -133,7 +133,7 @@ class FormContext {
           FormToken vt = formTokens.get(cmdPtr);
           checkIf = true;
           vt.endPtr = ptr;
-          cmds.add(0, new Integer(ptr));
+          cmds.add(0, Integer.valueOf(ptr));
         } else if (token.indexOf("#else") == firstChar) {
           if (cmds.size() == 0) {
             strError = "misplaced #else";
@@ -143,7 +143,7 @@ class FormContext {
           checkIf = true;
           cmdPtr = cmds.removeItemAt(0).intValue();
           formTokens.get(cmdPtr).endPtr = ptr;
-          cmds.add(0, new Integer(ptr));
+          cmds.add(0, Integer.valueOf(ptr));
         } else {
           Logger.warn("??? " + token);
         }
@@ -251,9 +251,9 @@ class FormContext {
 				Object varData = vt.vc.get(vt.pointCount);
 				if (varData instanceof Coordinate) {
 					Coordinate c = (Coordinate) varData;
-					context.put("pointCount", new Integer(vt.pointCount));
-					context.put(vt.var + ".xVal", new Double(c.getXVal()));
-					context.put(vt.var + ".yVal", new Double(c.getYVal()));
+					context.put("pointCount", Integer.valueOf(vt.pointCount));
+					context.put(vt.var + ".xVal", Double.valueOf(c.getXVal()));
+					context.put(vt.var + ".yVal", Double.valueOf(c.getYVal()));
 					context.put(vt.var + ".getXString()", getXString(c));
 					context.put(vt.var + ".getYString()", getYString(c));
 				} else if (varData instanceof Map<?, ?>) {

@@ -3723,7 +3723,7 @@ public class JMEmol {
             smilesAddBond(con1[j], con2[j], smiles, slashBond, queryMode);
           if (j > 9)
             smiles.append("%");
-          smiles.append(new Integer(j).toString());
+          smiles.append(Integer.valueOf(j).toString());
         }
       }
 
@@ -4945,14 +4945,14 @@ public class JMEmol {
       if (atag[i] == null || atag[i].length() == 0)
         continue;
       if (atag[i].equals("abs"))
-        abs.add(new Integer(i));
+        abs.add(Integer.valueOf(i));
       else if (atag[i].startsWith("mix")) {
         int n = Integer.parseInt(atag[i].substring(3));
         ArrayList<Integer> o = null;
         if (mixlists.size() > n)
           o = mixlists.get(n);
         ArrayList<Integer> l = (o == null ? new ArrayList<Integer>() : o);
-        l.add(new Integer(i));
+        l.add(Integer.valueOf(i));
         mixlists.set(n, l);
       } else if (atag[i].startsWith("or")) {
         int n = Integer.parseInt(atag[i].substring(2));
@@ -4960,7 +4960,7 @@ public class JMEmol {
         if (orlists.size() > n)
           o = orlists.get(n);
         ArrayList<Integer> l = (o == null ? new ArrayList<Integer>() : o);
-        l.add(new Integer(i));
+        l.add(Integer.valueOf(i));
         orlists.set(n, l);
       }
     }
@@ -5003,7 +5003,7 @@ public class JMEmol {
 
   // ----------------------------------------------------------------------------
   static String iformat(int number, int len) {
-    Integer n = new Integer(number);
+    Integer n = Integer.valueOf(number);
     String s = n.toString();
     if (s.length() > len)
       s = "?";
@@ -5023,7 +5023,7 @@ public class JMEmol {
       number = 0.; // 2012 fix 1.0E-4
     number = (int) Math.round(number * Math.pow(10., dec))
         / (Math.pow(10., dec));
-    String s = new Double(number).toString(); // this sometimes return 1.0E-4
+    String s = Double.valueOf(number).toString(); // this sometimes return 1.0E-4
     int dotpos = s.indexOf('.');
     if (dotpos < 0) {
       s += ".";

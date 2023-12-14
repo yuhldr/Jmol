@@ -114,7 +114,7 @@ public class NmrMolecule {
     double jvalue = dihe.getJvalue();
     if (Double.isNaN(jvalue))
       return;
-    couples.add(new Double(jvalue));
+    couples.add(Double.valueOf(jvalue));
     couplesWhole.add(dihe);
   }
 
@@ -197,7 +197,7 @@ public class NmrMolecule {
    */
   public void addJmolDistance(int a, int b) {
 
-    distances.add(new Double(noeMatrix.getJmolDistance(a, b)));
+    distances.add(Double.valueOf(noeMatrix.getJmolDistance(a, b)));
 
   }
 
