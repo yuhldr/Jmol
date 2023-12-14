@@ -18,7 +18,7 @@ msgstr ""
 
 #: org/jmol/awt/FileDropper.java:106
 msgid "Would you like to replace the current model with the selected model?"
-msgstr ""
+msgstr "是否要用所选模型替换当前模型"
 
 #: org/jmol/awtjs2d/JSModelKitPopup.java:89
 #: org/jmol/modelkit/ModelKitPopup.java:72
@@ -31,17 +31,17 @@ msgstr "Jmol 脚本控制台"
 
 #: org/jmol/console/GenericConsole.java:90
 msgid "&Save As..."
-msgstr ""
+msgstr "另存为(&S)"
 
 #: org/jmol/console/GenericConsole.java:91
 #, fuzzy
 msgid "&File"
-msgstr "文件"
+msgstr "文件(&F)"
 
 #: org/jmol/console/GenericConsole.java:92
 #, fuzzy
 msgid "&Close"
-msgstr "关闭"
+msgstr "关闭(&C)"
 
 #: org/jmol/console/GenericConsole.java:97
 msgid "&Help"
@@ -343,7 +343,7 @@ msgstr "附加模型"
 
 #: org/jmol/dialog/FilePreview.java:100
 msgid "PDB cartoons"
-msgstr ""
+msgstr "PDB动画"
 
 #: org/jmol/dssx/DSSP.java:288
 #, java-format
@@ -380,7 +380,7 @@ msgstr "阿斯图里亚斯语"
 
 #: org/jmol/i18n/Language.java:79
 msgid "Azerbaijani"
-msgstr ""
+msgstr "阿塞拜疆语"
 
 #: org/jmol/i18n/Language.java:80
 msgid "Bosnian"
@@ -428,7 +428,7 @@ msgstr "爱沙尼亚语"
 
 #: org/jmol/i18n/Language.java:91
 msgid "Basque"
-msgstr ""
+msgstr "巴斯克语"
 
 #: org/jmol/i18n/Language.java:92
 msgid "Finnish"
@@ -640,7 +640,7 @@ msgstr "拖动原子(并最小化)"
 
 #: org/jmol/modelkit/ModelKitPopupResourceBundle.java:103
 msgid "drag molecule (ALT to rotate)"
-msgstr ""
+msgstr "拖动分子（ALT旋转）"
 
 #: org/jmol/modelkit/ModelKitPopupResourceBundle.java:104
 msgid "drag and minimize molecule (docking)"
@@ -722,7 +722,7 @@ msgstr "最大 {0} MB"
 
 #: org/jmol/popup/JmolGenericPopup.java:1050
 msgid "not capturing"
-msgstr ""
+msgstr "没有捕捉到"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:266
 #, fuzzy
@@ -879,7 +879,7 @@ msgstr "视图"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:313
 msgid "Best"
-msgstr ""
+msgstr "最好"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:314
 msgid "Front"
@@ -897,7 +897,7 @@ msgstr "右视"
 msgid ""
 "Top[as in \"view from the top, from above\" - (translators: remove this "
 "bracketed part]"
-msgstr ""
+msgstr "顶部"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:318
 msgid "Bottom"
@@ -910,36 +910,36 @@ msgstr "返回"
 #: org/jmol/popup/MainPopupResourceBundle.java:320
 #, fuzzy
 msgid "Axis x"
-msgstr "轴"
+msgstr "x轴"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:321
 #, fuzzy
 msgid "Axis y"
-msgstr "轴"
+msgstr "y轴"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:322
 #, fuzzy
 msgid "Axis z"
-msgstr "轴"
+msgstr "z轴"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:323
 #, fuzzy
 msgid "Axis a"
-msgstr "轴"
+msgstr "a轴"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:324
 #, fuzzy
 msgid "Axis b"
-msgstr "轴"
+msgstr "b轴"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:325
 #, fuzzy
 msgid "Axis c"
-msgstr "轴"
+msgstr "c轴"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:327
 msgid "Scenes"
-msgstr ""
+msgstr "场景"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:329
 msgid "Protein"
@@ -1693,7 +1693,7 @@ msgstr "文件"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:621
 msgid "Export"
-msgstr ""
+msgstr "导出"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:622
 msgid "Reload"
@@ -1724,39 +1724,39 @@ msgstr "打开脚本"
 #: org/jmol/popup/MainPopupResourceBundle.java:629
 #: org/jmol/viewer/OutputManager.java:792
 msgid "Capture"
-msgstr ""
+msgstr "捕获"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:630
 msgid "Capture rock"
-msgstr ""
+msgstr "捕获rock"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:631
 msgid "Capture spin"
-msgstr ""
+msgstr "捕获旋转"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:632
 msgid "Start capturing"
-msgstr ""
+msgstr "开始捕获"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:633
 msgid "End capturing"
-msgstr ""
+msgstr "捕捉结束"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:634
 msgid "Disable capturing"
-msgstr ""
+msgstr "禁止捕获"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:635
 msgid "Re-enable capturing"
-msgstr ""
+msgstr "重新允许捕获"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:636
 msgid "Set capture replay rate"
-msgstr ""
+msgstr "设置捕获重放速率"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:637
 msgid "Toggle capture looping"
-msgstr ""
+msgstr "切换捕获循环"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:639
 #, java-format
@@ -1837,11 +1837,11 @@ msgstr "溶剂可及表面 (范德华表面 + {0} Å)"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:669
 msgid "Molecular Electrostatic Potential (range ALL)"
-msgstr ""
+msgstr "分子静电势（范围ALL）"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:670
 msgid "Molecular Electrostatic Potential (range -0.1 0.1)"
-msgstr ""
+msgstr "分子静电势（范围-0.1 0.1）"
 
 #: org/jmol/popup/MainPopupResourceBundle.java:676
 #: org/jmol/popup/MainPopupResourceBundle.java:677
@@ -2165,7 +2165,7 @@ msgstr "脚本错误： "
 #: org/jmol/script/ScriptEval.java:3263
 #, java-format
 msgid "show saved: {0}"
-msgstr ""
+msgstr "显示已保存：{0}"
 
 #: org/jmol/script/ScriptEval.java:3277 org/jmol/script/ScriptEval.java:7960
 #, java-format
@@ -2185,7 +2185,7 @@ msgstr "已创建文件： {0}"
 #: org/jmol/script/ScriptEval.java:7667
 #, java-format
 msgid "to resume, enter: &{0}"
-msgstr ""
+msgstr "要继续，请输入：&{0}"
 
 #: org/jmol/script/ScriptTokenParser.java:1490
 #, java-format
@@ -2257,7 +2257,7 @@ msgstr "无法识别标记：{0}"
 #: org/jmol/scriptext/CmdExt.java:621
 #, java-format
 msgid "{0} charges modified"
-msgstr ""
+msgstr "{0} charges 被修改"
 
 #: org/jmol/scriptext/CmdExt.java:729
 #, java-format
@@ -2267,12 +2267,12 @@ msgstr "已增加 {0} struts"
 #: org/jmol/scriptext/CmdExt.java:865
 #, java-format
 msgid "Note: Enable looping using {0}"
-msgstr ""
+msgstr "注意：启用循环使用 {0}"
 
 #: org/jmol/scriptext/CmdExt.java:867
 #, java-format
 msgid "Animation delay based on: {0}"
-msgstr ""
+msgstr "动画延迟基于以下因素：{0}"
 
 #: org/jmol/scriptext/CmdExt.java:1872
 #, java-format
@@ -2286,7 +2286,7 @@ msgstr "{0} 个新化学键; {1} 个己修改"
 
 #: org/jmol/scriptext/MathExt.java:3661
 msgid "Note: More than one model is involved in this contact!"
-msgstr ""
+msgstr "注意：此连接涉及多个模型！"
 
 #: org/jmol/shape/Frank.java:92
 msgid "Click for menu..."
@@ -2373,7 +2373,7 @@ msgstr "移动所选原子 (需要 {0})"
 #: org/jmol/viewer/ActionManager.java:259
 #, java-format
 msgid "drag atoms in Z direction (requires {0})"
-msgstr ""
+msgstr "沿Z方向拖动原子（需要{0}）"
 
 #: org/jmol/viewer/ActionManager.java:261
 msgid "simulate multi-touch using the mouse)"
@@ -2552,12 +2552,12 @@ msgstr "选择两个原子以显示它们之间的对称性关系"
 
 #: org/jmol/viewer/OutputManager.java:794
 msgid "canceled"
-msgstr ""
+msgstr "被取消"
 
 #: org/jmol/viewer/OutputManager.java:795
 #, java-format
 msgid "{0} saved"
-msgstr ""
+msgstr "{0} 被保存"
 
 #: org/jmol/viewer/OutputManager.java:861
 #, java-format

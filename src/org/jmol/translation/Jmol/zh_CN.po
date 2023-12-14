@@ -19,7 +19,7 @@ msgstr ""
 
 #: org/jmol/awtjs2d/JSModelKitPopup.java:89
 msgid "Element?"
-msgstr ""
+msgstr "元素？"
 
 #: org/openscience/jmol/app/JmolApp.java:106
 msgid "Error starting Jmol: the property 'user.home' is not defined."
@@ -31,6 +31,8 @@ msgid ""
 "buttons (default 0.2; numbers > 10 assumed to be milliseconds; set to 0 to "
 "disable)"
 msgstr ""
+"工具栏动画按钮按住操作的延迟时间（默认为 0.2，可以是大于 10 的数字，以秒为单位；设置0即为禁止）"
+
 
 #: org/openscience/jmol/app/JmolApp.java:146
 msgid "transparent background"
@@ -63,7 +65,7 @@ msgstr "显示此帮助页面"
 
 #: org/openscience/jmol/app/JmolApp.java:164
 msgid "allow piping of input from System.Input"
-msgstr ""
+msgstr "允许从 System.Input 进行输入管道传递"
 
 #: org/openscience/jmol/app/JmolApp.java:165
 msgid "silent startup operation"
@@ -95,7 +97,7 @@ msgstr "使用多点触控(multitouch)界面（需要“sparshui”参数）"
 
 #: org/openscience/jmol/app/JmolApp.java:183
 msgid "menu file to use"
-msgstr ""
+msgstr "要使用的菜单文件"
 
 #: org/openscience/jmol/app/JmolApp.java:186
 msgid "no display (and also exit when done)"
@@ -133,7 +135,7 @@ msgstr "需执行的脚本文件，或“-”表示使用system.in"
 
 #: org/openscience/jmol/app/JmolApp.java:208
 msgid "headless max time (sec)"
-msgstr ""
+msgstr "headless最大时间（秒）"
 
 #: org/openscience/jmol/app/JmolApp.java:211
 msgid "independent command thread"
@@ -291,7 +293,7 @@ msgstr "震动关"
 #: org/openscience/jmol/app/jmolpanel/CreditsDialog.java:35
 #: org/openscience/jmol/app/jmolpanel/GuiMap.java:228
 msgid "Credits"
-msgstr ""
+msgstr "Credits"
 
 #: org/openscience/jmol/app/jmolpanel/DisplayPanel.java:238
 msgid "Delete atoms"
@@ -308,7 +310,7 @@ msgstr "记录点文件： "
 
 #: org/openscience/jmol/app/jmolpanel/GaussianDialog.java:238
 msgid "Memory:"
-msgstr ""
+msgstr "内存："
 
 #: org/openscience/jmol/app/jmolpanel/GaussianDialog.java:245
 #, fuzzy
@@ -329,7 +331,7 @@ msgstr "基本设置: "
 
 #: org/openscience/jmol/app/jmolpanel/GaussianDialog.java:281
 msgid "DFT Density Fit: "
-msgstr ""
+msgstr "DFT密度拟合度："
 
 #: org/openscience/jmol/app/jmolpanel/GaussianDialog.java:288
 msgid "Job Options: "
@@ -361,7 +363,7 @@ msgstr "选择： "
 
 #: org/openscience/jmol/app/jmolpanel/GaussianDialog.java:380
 msgid "Refresh"
-msgstr ""
+msgstr "刷新"
 
 #: org/openscience/jmol/app/jmolpanel/GaussianDialog.java:384
 #: org/openscience/jmol/app/jmolpanel/PovrayDialog.java:779
@@ -722,32 +724,32 @@ msgstr "左侧(&L)"
 #: org/openscience/jmol/app/jmolpanel/GuiMap.java:177
 #, fuzzy
 msgid "Axis a"
-msgstr "坐标轴"
+msgstr "坐标轴 a"
 
 #: org/openscience/jmol/app/jmolpanel/GuiMap.java:178
 #, fuzzy
 msgid "Axis b"
-msgstr "坐标轴"
+msgstr "坐标轴 b"
 
 #: org/openscience/jmol/app/jmolpanel/GuiMap.java:179
 #, fuzzy
 msgid "Axis c"
-msgstr "坐标轴"
+msgstr "坐标轴 c"
 
 #: org/openscience/jmol/app/jmolpanel/GuiMap.java:180
 #, fuzzy
 msgid "Axis x"
-msgstr "坐标轴"
+msgstr "坐标轴 x"
 
 #: org/openscience/jmol/app/jmolpanel/GuiMap.java:181
 #, fuzzy
 msgid "Axis y"
-msgstr "坐标轴"
+msgstr "坐标轴 y"
 
 #: org/openscience/jmol/app/jmolpanel/GuiMap.java:182
 #, fuzzy
 msgid "Axis z"
-msgstr "坐标轴"
+msgstr "坐标轴 z"
 
 #: org/openscience/jmol/app/jmolpanel/GuiMap.java:183
 msgid "Tr&ansform..."
@@ -767,7 +769,7 @@ msgstr "高斯(&G)..."
 
 #: org/openscience/jmol/app/jmolpanel/GuiMap.java:188
 msgid "&Config"
-msgstr ""
+msgstr "配置(&C)"
 
 #: org/openscience/jmol/app/jmolpanel/GuiMap.java:189
 #, fuzzy
@@ -776,11 +778,11 @@ msgstr "模式："
 
 #: org/openscience/jmol/app/jmolpanel/GuiMap.java:190
 msgid "&Run"
-msgstr ""
+msgstr "运行(&R)"
 
 #: org/openscience/jmol/app/jmolpanel/GuiMap.java:192
 msgid "&Search"
-msgstr ""
+msgstr "搜索(&S)"
 
 #: org/openscience/jmol/app/jmolpanel/GuiMap.java:194
 msgid "Distance &Units"
@@ -908,7 +910,7 @@ msgstr "帮助(&H)"
 
 #: org/openscience/jmol/app/jmolpanel/GuiMap.java:226
 msgid "Jmol Wiki"
-msgstr ""
+msgstr "Jmol文档"
 
 #: org/openscience/jmol/app/jmolpanel/GuiMap.java:227
 msgid "What's New"
@@ -1026,18 +1028,22 @@ msgid ""
 "Once the molecule file is fully loaded, the image at right will become "
 "live.  At that time the \"activate 3-D\" icon {0} will disappear."
 msgstr ""
+"分子文件完全加载后，右边的图像将变成实时的。"
+"届时，“激活3-D”图标 {0} 将消失。"
 
 #: org/openscience/jmol/app/jmolpanel/GuiMap.java:422
 msgid ""
 "You may look at any of these intermediate views again by clicking on the "
 "appropriate button."
 msgstr ""
+"您可以通过单击相应的按钮再次查看这些中间视图中的任何一个。"
 
 #: org/openscience/jmol/app/jmolpanel/GuiMap.java:425
 msgid ""
 "If your browser/OS combination is Java capable, you will get snappier "
 "performance if you <a href=\"?use=JAVA\">use Java</a>"
 msgstr ""
+"如果您的浏览器操作系统组合支持Java，则<a href=\"?使用Java\">use Java</a>将获得更快的性能"
 
 #: org/openscience/jmol/app/jmolpanel/GuiMap.java:428
 #, fuzzy, java-format
@@ -1117,7 +1123,7 @@ msgstr "启动Jmol..."
 
 #: org/openscience/jmol/app/jmolpanel/JmolPanel.java:598
 msgid "Exit Jmol?"
-msgstr ""
+msgstr "退出 Jmol"
 
 #: org/openscience/jmol/app/jmolpanel/JmolPanel.java:599
 #, fuzzy
@@ -1456,7 +1462,7 @@ msgstr "变量"
 
 #: org/openscience/jmol/app/jmolpanel/console/AppConsole.java:294
 msgid "toggle font size"
-msgstr ""
+msgstr "切换字体大小"
 
 #: org/openscience/jmol/app/jsonkiosk/JsonNioService.java:514
 msgid "magic"
@@ -1524,7 +1530,7 @@ msgstr "同步"
 
 #: org/openscience/jmol/app/nbo/NBODialogConfig.java:118
 msgid "NBO Server Interface"
-msgstr ""
+msgstr "NBO服务器接口"
 
 #: org/openscience/jmol/app/surfacetool/SurfaceTool.java:72
 msgid "Degrees"
@@ -1554,7 +1560,7 @@ msgstr "百分比缩放比率未完成！"
 
 #: org/openscience/jmol/app/surfacetool/SurfaceToolGUI.java:135
 msgid "SurfaceTool"
-msgstr ""
+msgstr "曲面工具"
 
 #: org/openscience/jmol/app/surfacetool/SurfaceToolGUI.java:154
 #: org/openscience/jmol/app/surfacetool/SurfaceToolGUI.java:157
@@ -1572,13 +1578,15 @@ msgstr "原点"
 
 #: org/openscience/jmol/app/surfacetool/SurfaceToolGUI.java:169
 msgid "Cap"
-msgstr ""
+msgstr "帽子"
 
 #: org/openscience/jmol/app/surfacetool/SurfaceToolGUI.java:172
 msgid ""
 "Caps slice with opaque surfaces.\n"
 "Ignores MOs and surfaces with interior layers."
 msgstr ""
+"具有不透明表面的CAPS切片。"
+"忽略具有内部层的MOs和曲面。"
 
 #: org/openscience/jmol/app/surfacetool/SurfaceToolGUI.java:176
 msgid "Slice Planes"
@@ -1598,7 +1606,7 @@ msgstr "显示一个没有被切割的 \\\"ghost\\\"."
 
 #: org/openscience/jmol/app/surfacetool/SurfaceToolGUI.java:208
 msgid "Angle from X-axis in XY plane"
-msgstr ""
+msgstr "XY平面中与X轴的角度"
 
 #: org/openscience/jmol/app/surfacetool/SurfaceToolGUI.java:219
 msgid "Angle from Z-axis"
@@ -1610,7 +1618,7 @@ msgstr "标准的方向向量到切片"
 
 #: org/openscience/jmol/app/surfacetool/SurfaceToolGUI.java:233
 msgid "Distance of slice from origin"
-msgstr ""
+msgstr "切片到原点的距离"
 
 #: org/openscience/jmol/app/surfacetool/SurfaceToolGUI.java:245
 msgid "Thickness of slice"
@@ -1727,7 +1735,7 @@ msgstr "命名保存网页"
 
 #: org/openscience/jmol/app/webexport/WebPanel.java:294
 msgid "View HTML"
-msgstr ""
+msgstr "查看 HTML"
 
 #: org/openscience/jmol/app/webexport/WebPanel.java:305
 #, fuzzy
@@ -1796,7 +1804,7 @@ msgstr "正在加入 {0}"
 #: org/openscience/jmol/app/webexport/WebPanel.java:611
 msgid ""
 "There was an error in the text encoding so the path to jsmol.zip is unknown."
-msgstr ""
+msgstr "文本编码中存在错误，因此 jsmol.zip 的路径未知。"
 
 #: org/openscience/jmol/app/webexport/WebPanel.java:651
 #, java-format
@@ -1821,7 +1829,7 @@ msgstr "工作目录"
 #: org/openscience/jmol/app/webexport/WebPanel.java:745
 #, java-format
 msgid "copying and unzipping jsmol.zip directory into {0}"
-msgstr ""
+msgstr "复制并解压 jsmol.zip 目录到{0}"
 
 #: org/openscience/jmol/app/webexport/WebPanel.java:762
 #, java-format
@@ -1855,6 +1863,8 @@ msgid ""
 "Error encountered while openning zip file. You may not have\n"
 "a complete copy of the Jmol distribution.  Check for the file jsmol.zip.\n"
 msgstr ""
+"打开压缩文件时遇到错误。你可能还没有"
+"JMOL发行版的完整副本。检查 jsmol.zip 文件。"
 
 #: org/openscience/jmol/app/webexport/Widgets.java:86
 msgid "Spin on/off"
