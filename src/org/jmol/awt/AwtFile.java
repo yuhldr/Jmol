@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
-import java.security.AccessControlException;
 
 import org.jmol.api.GenericFileInterface;
 import org.jmol.viewer.Viewer;
@@ -31,12 +30,9 @@ class AwtFile extends File implements GenericFileInterface {
   @Override
   public GenericFileInterface getParentAsFile() {
     AwtFile f = null;
-    try {
-      File file = getParentFile();
-      f = new AwtFile(file.getAbsolutePath());
-    } catch (AccessControlException e) {
-      //
-    }
+    File file = getParentFile();
+    f = new AwtFile(file.getAbsolutePath());
+
     return f;
   }
 
