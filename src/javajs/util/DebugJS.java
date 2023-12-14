@@ -12,7 +12,7 @@ public class DebugJS {
 	 * @param msg 
 	 * 
 	 */
-		 public static void _(String msg) {
+		 public static void _test(String msg) {
 		/**
 		 * @j2sNative
 		 * 
