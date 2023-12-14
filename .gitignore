@@ -2,3 +2,4 @@ build
 site
 bin/jspecview
 *.class
+translations.tgz

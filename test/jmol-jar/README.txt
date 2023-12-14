@@ -1,1 +1,0 @@
-see https://sourceforge.net/p/jmol/code/HEAD/tree/trunk/Jmol/test/jmol-jar/
