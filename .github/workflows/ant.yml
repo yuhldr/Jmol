@@ -10,15 +10,11 @@ on:
     branches: [ "main" ]
 
 
-env:
-  TAG_NAME: "auto"
-  SOFTWARE_NAME: "ldr-translate"
-
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 17
@@ -27,13 +23,16 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
     - name: Build with Ant
-      run: ant -noinput -buildfile build.xml
-
-    - name: Create Release and Upload Release Asset
+      run: ant
+    - name: Test
+      run: |
+        ls -l --block-size=m /tmp/Jmol.jar
+        ls -l --block-size=m build/Jmol.jar
+    - name: Publish jar
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ env.TAG_NAME }}
-        prerelease: true
+        tag_name: auto
+        prerelease: false
         draft: false
         files: |
-          build/Jmol.jar
+          /tmp/Jmol.jar
