@@ -1,7 +1,0 @@
-SWITCH IA IB      [switch atoms IA, IB (and
-                        attached groups) to invert
-                        configuration at an attached
-                        stereocenter.]
-      Example:
-       SHOW ALA         (L-alanine)
-       SWITCH 6 7       (switch to D-alanine)
